@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bán Kính & Chỉ Đường (OSM - Tuyến đường thực tế)</title>
+  
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- TurfJS -->
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+  <!-- Thư viện giải mã Google Plus Code -->
+  <script src="https://cdn.jsdelivr.net/npm/open-location-code@1.0.3/openlocationcode.min.js"></script>
+
+  <style>
+    #map { height: 100vh; width: 100%; z-index: 1; background: #e5e7eb; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 3px; }
+    
+    /* BADGE NHÃN THỜI GIAN TRÊN BẢN ĐỒ */
+    .route-badge {
+      background: #ffffff;
+      border: 2px solid #9ca3af;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-weight: 700;
+      font-size: 11px;
+      color: #4b5563;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .route-badge.active {
+      border-color: #2563eb;
+      color: #1e293b;
+      font-size: 12px;
+      padding: 4px 12px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased flex flex-col md:flex-row h-screen overflow-hidden">
+
+  <!-- SIDEBAR BÊN TRÁI -->
+  <div class="w-full md:w-[410px] bg-white h-auto md:h-full flex flex-col z-10 shadow-2xl relative border-r border-gray-200">
+    
+    <!-- HEADER -->
+    <div class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white/20 p-2 rounded-xl">
+          <i class="fa-solid fa-route text-xl text-white"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Bán Kính & Chỉ Đường</h1>
+          <p class="text-xs text-blue-100">Tính theo đường bộ thực tế (OpenStreetMap)</p>
+        </div>
+      </div>
+      <button onclick="resetApp()" class="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1.5 rounded-lg transition" title="Đặt lại">
+        <i class="fa-solid fa-rotate-left"></i> Đặt lại
+      </button>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="p-4 flex-1 overflow-y-auto custom-scrollbar space-y-4">
+
+      <!-- QUẢN LÝ ĐIỂM A ĐÃ LƯU -->
+      <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold text-blue-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-bookmark text-blue-600"></i> Danh Sách Điểm A Đã Ghi Nhớ
+          </label>
+          <button onclick="deleteSelectedPointA()" id="btnDeleteA" class="hidden text-[11px] text-rose-600 hover:underline font-semibold">
+            <i class="fa-solid fa-trash"></i> Xóa
+          </button>
+        </div>
+        <select id="savedPointsA" onchange="loadSelectedPointA(this.value)" class="w-full p-2 text-xs border border-blue-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">-- Chọn điểm A đã ghi nhớ --</option>
+        </select>
+      </div>
+
+      <!-- NÚT CHỌN TRÊN BẢN ĐỒ -->
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btnSelectA" onclick="setSelectMode('A')" class="py-2 px-3 border border-blue-500 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-50 transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-crosshairs"></i> Chọn A trên bản đồ
+        </button>
+        <button id="btnSelectB" onclick="setSelectMode('B')" class="py-2 px-3 border border-rose-500 text-rose-600 rounded-lg text-xs font-semibold hover:bg-rose-50 transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-crosshairs"></i> Chọn B trên bản đồ
+        </button>
+      </div>
+
+      <!-- ĐIỂM A -->
+      <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1.5">
+            <span class="w-5 h-5 bg-blue-600 text-white rounded-full inline-flex items-center justify-center text-[10px]">A</span>
+            Điểm A (Tâm Bán Kính)
+          </label>
+          <span id="coordsA" class="text-[11px] font-mono text-gray-400">Chưa chọn</span>
+        </div>
+        
+        <div class="flex gap-2">
+          <input type="text" id="inputA" placeholder="Địa chỉ / tên địa danh / tọa độ / Plus Code / link Google Maps..." 
+                 class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+          <button id="btnSearchA" onclick="handleSearch('A')" class="bg-blue-600 text-white px-3.5 py-2.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition shrink-0 flex items-center gap-1">
+            <i class="fa-solid fa-magnifying-glass"></i> Tìm
+          </button>
+        </div>
+
+        <div id="saveBoxA" class="hidden pt-1">
+          <button onclick="saveCurrentPointA()" class="w-full py-1.5 px-3 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu vị trí A này
+          </button>
+        </div>
+      </div>
+
+      <!-- ĐIỂM B -->
+      <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold uppercase tracking-wider text-rose-700 flex items-center gap-1.5">
+            <span class="w-5 h-5 bg-rose-600 text-white rounded-full inline-flex items-center justify-center text-[10px]">B</span>
+            Điểm B (Kiểm Tra / Đích)
+          </label>
+          <span id="coordsB" class="text-[11px] font-mono text-gray-400">Chưa chọn</span>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="inputB" placeholder="Địa chỉ / tên địa danh / tọa độ / Plus Code / link Google Maps..." 
+                 class="w-full text-xs p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none bg-white">
+          <button id="btnSearchB" onclick="handleSearch('B')" class="bg-rose-600 text-white px-3.5 py-2.5 rounded-lg text-xs font-bold hover:bg-rose-700 transition shrink-0 flex items-center gap-1">
+            <i class="fa-solid fa-magnifying-glass"></i> Tìm
+          </button>
+        </div>
+      </div>
+
+      <div class="text-[10px] leading-relaxed text-gray-500 bg-amber-50 border border-amber-200 rounded-lg p-2">
+        <i class="fa-solid fa-circle-info text-amber-600"></i>
+        <b>A và B đều hỗ trợ:</b> địa chỉ, tên địa danh, tọa độ (VD: 16.0471, 108.2068),
+        Plus Code và link Google Maps. Với Điểm A, khi bấm <b>Lưu vị trí A này</b>, bạn có thể đặt tên
+        ngắn như “Nhà”, “Kho Đà Nẵng”, “Cửa hàng 1”; danh sách sẽ chỉ hiện tên này, không hiện URL dài.
+      </div>
+
+      <!-- BÁN KÍNH KIỂM TRA -->
+      <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 space-y-2">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold text-gray-700">Bán kính kiểm tra:</span>
+          <span id="radiusVal" class="font-bold text-blue-600 text-sm bg-blue-100 px-2.5 py-0.5 rounded-full">24 km</span>
+        </div>
+        <input type="range" id="radiusSlider" min="1" max="100" value="24" 
+               class="w-full accent-blue-600 cursor-pointer" oninput="updateRadius(this.value)">
+      </div>
+
+      <!-- DANH SÁCH CÁC TUYẾN ĐƯỜNG GỢI Ý -->
+      <div id="routeOptionsContainer" class="hidden space-y-2">
+        <div class="flex justify-between items-center px-1">
+          <span class="text-xs font-bold text-gray-600 uppercase tracking-wider">Các Tuyến Đường Gợi Ý:</span>
+          <span id="routeCountBadge" class="text-[10px] bg-gray-200 font-bold px-2 py-0.5 rounded-full text-gray-600">1 Tuyến</span>
+        </div>
+        <div id="routeList" class="space-y-1.5">
+          <!-- Danh sách tuyến đường sẽ được hiển thị tại đây -->
+        </div>
+      </div>
+
+      <!-- KẾT QUẢ KHOẢNG CÁCH -->
+      <div id="resultCard" class="p-4 rounded-xl border-2 transition-all duration-300 bg-gray-50 border-gray-200">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-gray-500 uppercase">TRẠNG THÁI VỊ TRÍ:</span>
+          <span id="statusBadge" class="text-xs px-2.5 py-1 rounded-full font-bold bg-gray-200 text-gray-700">Vui lòng chọn A & B</span>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2 text-center text-xs mt-3">
+          <div class="bg-white p-2.5 rounded-lg border border-gray-200">
+            <span class="block text-gray-400 font-medium text-[10px]">ĐƯỜNG CHIM BAY</span>
+            <strong id="distGeodesic" class="text-sm font-bold text-gray-800">-- km</strong>
+          </div>
+          <div class="bg-white p-2.5 rounded-lg border border-gray-200">
+            <span class="block text-gray-400 font-medium text-[10px]">ĐƯỜNG BỘ THỰC TẾ</span>
+            <strong id="distRoad" class="text-sm font-bold text-blue-600">-- km</strong>
+          </div>
+        </div>
+
+        <div class="mt-2 text-[10px] text-gray-500 text-center leading-relaxed">
+          Tuyến đường được tính từ dữ liệu OpenStreetMap/OSRM. Có thể khác Google Maps do dữ liệu đường, điểm vào đường, cấm rẽ và giao thông khác nhau.
+        </div>
+
+        <div id="timeBox" class="mt-2 text-center bg-blue-50 text-blue-800 p-2 rounded-lg text-xs font-semibold">
+          <i class="fa-solid fa-car"></i> Thời gian di chuyển: <span id="distTime" class="font-bold">-- phút</span>
+        </div>
+      </div>
+
+      <!-- GOOGLE ROUTES API -->
+      <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-blue-800 flex items-center gap-1.5">
+            <i class="fa-brands fa-google"></i> Chỉ đường Google Maps
+          </label>
+          <span id="routeProviderBadge" class="text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full font-bold">OSM miễn phí</span>
+        </div>
+        <input id="googleRoutesKey" type="password"
+          placeholder="Dán Google Routes API Key (không bắt buộc)"
+          class="w-full text-xs p-2.5 border border-blue-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="saveGoogleRoutesKey()" class="py-1.5 px-2 bg-blue-600 text-white rounded-lg text-[11px] font-bold hover:bg-blue-700">
+            <i class="fa-solid fa-key"></i> Lưu khóa trên máy
+          </button>
+          <button onclick="openGoogleDirections()" class="py-1.5 px-2 bg-white border border-blue-300 text-blue-700 rounded-lg text-[11px] font-bold hover:bg-blue-50">
+            <i class="fa-solid fa-up-right-from-square"></i> Mở Google Maps
+          </button>
+        </div>
+        <p class="text-[9px] leading-relaxed text-blue-700">
+          Có API key: tuyến, km và thời gian được tính bằng Google Routes API. Không có key: giữ nguyên OSM/OSRM miễn phí.
+          Google yêu cầu bật billing cho Routes API; trang giá hiện liệt kê hạn mức sử dụng miễn phí cho Compute Routes.
+        </p>
+      </div>
+
+      <!-- LỰA CHỌN KIỂU BẢN ĐỒ -->
+      <div class="text-xs space-y-1">
+        <label class="font-semibold text-gray-600">Kiểu bản đồ nền:</label>
+        <select id="mapStyle" onchange="changeMapTile(this.value)" class="w-full p-2 border border-gray-300 rounded-lg text-xs bg-white font-medium">
+          <option value="google_street">1. Google Maps (nền đường)</option>
+          <option value="google_satellite">2. Google Maps Vệ Tinh</option>
+          <option value="carto">3. CartoDB Voyager</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTAINER BẢN ĐỒ -->
+  <div class="flex-1 relative h-full">
+    <div id="map"></div>
+  </div>
+
+  <script>
+    let map, markerA, markerB, radiusLayer, tileLayer;
+    let routeLayersGroup = L.layerGroup();
+    let badgeLayersGroup = L.layerGroup();
+    let pointA = null;
+    let pointB = null;
+    let radiusKm = 24;
+    let selectMode = null;
+    
+    let routesData = [];
+    let activeRouteIndex = 0;
+
+    const MAP_TILES = {
+      google_street: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=vi',
+      google_satellite: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&hl=vi',
+      carto: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+    };
+
+    window.addEventListener('load', () => {
+      initMap();
+      loadSavedPointsAFromStorage();
+
+      // Nhấn Enter trong ô A/B để tìm luôn.
+      ['inputA', 'inputB'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearch(id === 'inputA' ? 'A' : 'B');
+          }
+        });
+      });
+    });
+
+    function initMap() {
+      map = L.map('map', { zoomControl: false }).setView([12.4, 109.2], 10);
+      L.control.zoom({ position: 'topright' }).addTo(map);
+
+      tileLayer = L.tileLayer(MAP_TILES.google_street, {
+        maxZoom: 20,
+        subdomains: ['a', 'b', 'c', 'd'],
+        attribution: '© Google Maps'
+      }).addTo(map);
+
+      routeLayersGroup.addTo(map);
+      badgeLayersGroup.addTo(map);
+
+      map.on('click', (e) => {
+        if (selectMode === 'A') {
+          setPointA([e.latlng.lat, e.latlng.lng]);
+          selectMode = null;
+          resetSelectButtons();
+        } else if (selectMode === 'B') {
+          setPointB([e.latlng.lat, e.latlng.lng]);
+          selectMode = null;
+          resetSelectButtons();
+        }
+      });
+    }
+
+    function setPointA(coords, addressName = '') {
+      pointA = coords;
+      document.getElementById('coordsA').innerText = `${pointA[0].toFixed(4)}, ${pointA[1].toFixed(4)}`;
+      document.getElementById('saveBoxA').classList.remove('hidden');
+
+      if (addressName) document.getElementById('inputA').value = addressName;
+
+      const iconA = L.divIcon({
+        className: 'custom-icon-a',
+        html: `<div style="background-color:#2563eb;" class="w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold">A</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      });
+
+      if (markerA) map.removeLayer(markerA);
+      markerA = L.marker(pointA, { draggable: true, icon: iconA }).addTo(map);
+
+      markerA.on('dragend', (e) => {
+        pointA = [e.target.getLatLng().lat, e.target.getLatLng().lng];
+        document.getElementById('coordsA').innerText = `${pointA[0].toFixed(4)}, ${pointA[1].toFixed(4)}`;
+        updateUI();
+      });
+
+      updateUI();
+    }
+
+    function setPointB(coords, addressName = '') {
+      pointB = coords;
+      document.getElementById('coordsB').innerText = `${pointB[0].toFixed(4)}, ${pointB[1].toFixed(4)}`;
+
+      if (addressName) document.getElementById('inputB').value = addressName;
+
+      const iconB = L.divIcon({
+        className: 'custom-icon-b',
+        html: `<div style="background-color:#e11d48;" class="w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold">B</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      });
+
+      if (markerB) map.removeLayer(markerB);
+      markerB = L.marker(pointB, { draggable: true, icon: iconB }).addTo(map);
+
+      markerB.on('dragend', (e) => {
+        pointB = [e.target.getLatLng().lat, e.target.getLatLng().lng];
+        document.getElementById('coordsB').innerText = `${pointB[0].toFixed(4)}, ${pointB[1].toFixed(4)}`;
+        updateUI();
+      });
+
+      updateUI();
+    }
+
+    function parseCoordsOrUrl(str) {
+      if (!str) return null;
+
+      // 1) Tọa độ: 16.0471, 108.2068 / 16.0471 108.2068
+      const coordMatch = str.match(/^\s*(-?\d+(?:\.\d+)?)[,\s]+(-?\d+(?:\.\d+)?)\s*$/);
+      if (coordMatch) {
+        const lat = parseFloat(coordMatch[1]);
+        const lng = parseFloat(coordMatch[2]);
+        if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+          return [lat, lng];
+        }
+      }
+
+      // 2) Google Maps URL dạng @lat,lng
+      const urlMatch = str.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+      if (urlMatch) return [parseFloat(urlMatch[1]), parseFloat(urlMatch[2])];
+
+      // 3) Google Maps ?q=lat,lng hoặc ?ll=lat,lng
+      const qMatch = str.match(/[?&](?:q|ll)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
+      if (qMatch) return [parseFloat(qMatch[1]), parseFloat(qMatch[2])];
+
+      // 4) Google Maps dữ liệu place: !3dLAT!4dLNG
+      const placeMatch = str.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+      if (placeMatch) return [parseFloat(placeMatch[1]), parseFloat(placeMatch[2])];
+
+      // 5) Một số link Google Maps có /dir/LAT,LNG/...
+      const dirMatch = str.match(/\/(?:dir|search)\/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/i);
+      if (dirMatch) return [parseFloat(dirMatch[1]), parseFloat(dirMatch[2])];
+
+      // 6) Plus Code đầy đủ hoặc rút gọn.
+      const plusCodeMatch = str.match(/([23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,3})/i);
+      if (plusCodeMatch && typeof OpenLocationCode !== 'undefined') {
+        let code = plusCodeMatch[1].toUpperCase();
+
+        try {
+          if (code.length < 10) {
+            const refLat = pointA ? pointA[0] : 16.0471;
+            const refLng = pointA ? pointA[1] : 108.2068;
+            const recovered = OpenLocationCode.recoverNearest(code, refLat, refLng);
+            const codeArea = OpenLocationCode.decode(recovered);
+            return [codeArea.latitudeCenter, codeArea.longitudeCenter];
+          } else {
+            const codeArea = OpenLocationCode.decode(code);
+            return [codeArea.latitudeCenter, codeArea.longitudeCenter];
+          }
+        } catch (e) {
+          console.warn('Không giải mã được Plus Code:', e);
+        }
+      }
+
+      return null;
+    }
+
+    // TÌM ĐỊA CHỈ / TÊN ĐỊA DANH
+    // Miễn phí: thử Nominatim trước, nếu không có kết quả thì thử Photon,
+    // cuối cùng thử ArcGIS World Geocoder. Nhờ vậy địa chỉ Việt Nam cụ thể
+    // không phụ thuộc vào duy nhất một cơ sở dữ liệu.
+    async function handleSearch(target) {
+      const inputId = target === 'A' ? 'inputA' : 'inputB';
+      const btnId = target === 'A' ? 'btnSearchA' : 'btnSearchB';
+      const query = document.getElementById(inputId).value.trim();
+      if (!query) return;
+
+      const btn = document.getElementById(btnId);
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+      btn.disabled = true;
+
+      try {
+        // 1) Tọa độ / link Google Maps / Plus Code.
+        const parsedCoords = parseCoordsOrUrl(query);
+        if (parsedCoords) {
+          if (target === 'A') setPointA(parsedCoords, query);
+          else setPointB(parsedCoords, query);
+          map.setView(parsedCoords, 16);
+          return;
+        }
+
+        // 2) Chuẩn hóa nhẹ cách viết địa chỉ Việt Nam.
+        const normalized = normalizeVietnameseQuery(query);
+        const queries = buildSearchQueries(normalized);
+
+        let candidates = [];
+
+        // ----- Nominatim -----
+        for (const q of queries) {
+          try {
+            const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=8&countrycodes=vn&q=${encodeURIComponent(q)}`;
+            const res = await fetch(url, {
+              headers: {
+                'Accept': 'application/json',
+                'Accept-Language': 'vi'
+              }
+            });
+            if (!res.ok) continue;
+
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              candidates.push(...data.map(x => ({
+                lat: parseFloat(x.lat),
+                lon: parseFloat(x.lon),
+                display_name: x.display_name || q,
+                importance: parseFloat(x.importance) || 0,
+                source: 'Nominatim',
+                type: x.type || '',
+                address: x.address || {}
+              })));
+            }
+
+            if (candidates.length >= 8) break;
+          } catch (e) {
+            console.warn('Nominatim lỗi:', e);
+          }
+        }
+
+        // ----- Photon fallback -----
+        if (candidates.length === 0) {
+          for (const q of queries) {
+            try {
+              const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=8&lang=vi`;
+              const res = await fetch(url, {
+                headers: { 'Accept': 'application/json' }
+              });
+              if (!res.ok) continue;
+
+              const data = await res.json();
+              const features = Array.isArray(data.features) ? data.features : [];
+
+              candidates.push(...features.map(f => {
+                const p = f.properties || {};
+                const c = f.geometry?.coordinates || [];
+                return {
+                  lat: parseFloat(c[1]),
+                  lon: parseFloat(c[0]),
+                  display_name: buildPhotonDisplayName(p, q),
+                  importance: parseFloat(p.importance) || 0,
+                  source: 'Photon',
+                  type: p.type || '',
+                  address: p
+                };
+              }));
+
+              if (candidates.length >= 8) break;
+            } catch (e) {
+              console.warn('Photon lỗi:', e);
+            }
+          }
+        }
+
+        // ----- ArcGIS fallback -----
+        if (candidates.length === 0) {
+          for (const q of queries) {
+            try {
+              const url = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(q)}&f=json&maxLocations=8&outFields=*`;
+              const res = await fetch(url);
+              if (!res.ok) continue;
+
+              const data = await res.json();
+              const locations = Array.isArray(data.candidates) ? data.candidates : [];
+
+              candidates.push(...locations.map(x => ({
+                lat: parseFloat(x.location?.y),
+                lon: parseFloat(x.location?.x),
+                display_name: x.address || q,
+                importance: parseFloat(x.score) || 0,
+                source: 'ArcGIS',
+                type: x.attributes?.Addr_Type || '',
+                address: x.attributes || {}
+              })));
+
+              if (candidates.length >= 8) break;
+            } catch (e) {
+              console.warn('ArcGIS lỗi:', e);
+            }
+          }
+        }
+
+        candidates = candidates.filter(x =>
+          Number.isFinite(x.lat) &&
+          Number.isFinite(x.lon) &&
+          x.lat >= 8 && x.lat <= 24 &&
+          x.lon >= 102 && x.lon <= 110
+        );
+
+        if (!candidates.length) {
+          throw new Error('Không tìm thấy địa điểm');
+        }
+
+        // Chấm điểm kết quả để ưu tiên đúng số nhà + tên đường + Đà Nẵng,
+        // thay vì chỉ lấy importance cao nhất.
+        const best = chooseBestGeocodeCandidate(candidates, query);
+
+        const coords = [best.lat, best.lon];
+
+        if (target === 'A') setPointA(coords, best.display_name || query);
+        else setPointB(coords, best.display_name || query);
+
+        map.setView(coords, 17);
+
+      } catch (e) {
+        console.error('Lỗi tìm địa điểm:', e);
+        alert(
+          `Không tìm thấy hoặc không định vị chính xác địa chỉ "${query}".\\n\\n` +
+          `Bạn có thể thử:\\n` +
+          `• 414 Tôn Đức Thắng, Hòa Khánh, Đà Nẵng\\n` +
+          `• Chợ Hàn, Đà Nẵng\\n` +
+          `• 16.0471, 108.2068\\n` +
+          `• Dán trực tiếp link Google Maps`
+        );
+      } finally {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }
+    }
+
+    function normalizeVietnameseQuery(query) {
+      return query
+        .replace(/\bhoà\b/gi, 'hòa')
+        .replace(/\bhoa khanh\b/gi, 'Hòa Khánh')
+        .replace(/\bda nang\b/gi, 'Đà Nẵng')
+        .replace(/\bdanang\b/gi, 'Đà Nẵng')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function buildSearchQueries(query) {
+      const list = [];
+      const add = q => {
+        q = q.replace(/\s+/g, ' ').trim();
+        if (q && !list.some(x => x.toLowerCase() === q.toLowerCase())) list.push(q);
+      };
+
+      add(query);
+
+      // Một số geocoder tìm tốt hơn khi đảo trật tự số nhà + đường.
+      const m = query.match(/^\s*(\d+[A-Za-z]?)\s+(.+)$/);
+      if (m) {
+        add(`${m[2]}, ${m[1]}`);
+      }
+
+      if (!/đà nẵng|da nang/i.test(query)) {
+        add(`${query}, Đà Nẵng, Việt Nam`);
+      } else {
+        add(`${query}, Việt Nam`);
+      }
+
+      // Phiên bản bỏ dấu để tăng khả năng khớp với dữ liệu cũ.
+      add(removeVietnameseDiacritics(query));
+
+      return list.slice(0, 5);
+    }
+
+    function removeVietnameseDiacritics(str) {
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D');
+    }
+
+    function buildPhotonDisplayName(p, fallback) {
+      const parts = [
+        p.name,
+        p.street ? `${p.housenumber || ''} ${p.street}`.trim() : '',
+        p.district,
+        p.city,
+        p.state,
+        p.country
+      ].filter(Boolean);
+
+      return [...new Set(parts)].join(', ') || fallback;
+    }
+
+    function normalizeTextForMatch(value) {
+      return String(value || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    }
+
+    function chooseBestGeocodeCandidate(candidates, originalQuery) {
+      const q = normalizeTextForMatch(originalQuery);
+      const numberMatch = originalQuery.match(/\b(\d+[A-Za-z]?)\b/);
+      const houseNo = numberMatch ? normalizeTextForMatch(numberMatch[1]) : '';
+
+      return candidates
+        .map(c => {
+          const name = normalizeTextForMatch(c.display_name);
+          const addr = normalizeTextForMatch(JSON.stringify(c.address));
+          let score = (c.importance || 0) * 10;
+
+          // Tăng điểm nếu chứa số nhà người dùng nhập.
+          if (houseNo && (name.includes(` ${houseNo} `) || addr.includes(`"${houseNo}"`))) {
+            score += 60;
+          }
+
+          // Tăng điểm nếu tên đường/truy vấn xuất hiện trong kết quả.
+          const words = q.split(' ').filter(w => w.length >= 4);
+          words.forEach(w => {
+            if (name.includes(w)) score += 4;
+          });
+
+          // Ưu tiên kết quả có Đà Nẵng nếu truy vấn có Đà Nẵng.
+          if (/da nang|đà nẵng/i.test(originalQuery) && /da nang|đà nẵng/i.test(c.display_name)) {
+            score += 25;
+          }
+
+          return { ...c, _score: score };
+        })
+        .sort((a, b) => b._score - a._score)[0];
+    }
+
+    function updateUI() {
+      if (pointA) drawRadius();
+      if (pointA && pointB) calculateRoutes();
+    }
+
+    function drawRadius() {
+      if (radiusLayer) map.removeLayer(radiusLayer);
+      radiusLayer = L.circle(pointA, {
+        radius: radiusKm * 1000,
+        color: '#2563eb',
+        fillColor: '#3b82f6',
+        fillOpacity: 0.1,
+        weight: 2,
+        dashArray: '6, 6'
+      }).addTo(map);
+    }
+
+    // TÍNH TUYẾN:
+    // - Dùng dữ liệu đường OSM qua OSRM, không dùng đường chim bay để quyết định tuyến.
+    // - Không gọi "tuyến ngắn nhất" là "nhanh nhất": distance và duration là 2 tiêu chí khác nhau.
+    // - Thử router OSM dự phòng nếu OSRM chính không phản hồi.
+    async function calculateRoutes() {
+      const from = turf.point([pointA[1], pointA[0]]);
+      const to = turf.point([pointB[1], pointB[0]]);
+      const geodesicDist = turf.distance(from, to, { units: 'kilometers' });
+      document.getElementById('distGeodesic').innerText = `${geodesicDist.toFixed(2)} km`;
+
+      routeLayersGroup.clearLayers();
+      badgeLayersGroup.clearLayers();
+      routesData = [];
+
+      const googleKey = (localStorage.getItem('google_routes_api_key') || document.getElementById('googleRoutesKey')?.value || '').trim();
+
+      try {
+        if (googleKey) {
+          await calculateRoutesWithGoogle(googleKey);
+          return;
+        }
+
+        await calculateRoutesWithOSRM();
+      } catch (err) {
+        console.error('Lỗi lấy dữ liệu tuyến đường:', err);
+
+        if (googleKey) {
+          try {
+            await calculateRoutesWithOSRM();
+            document.getElementById('routeProviderBadge').innerText = 'OSRM dự phòng';
+            document.getElementById('routeProviderBadge').className = 'text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold';
+          } catch (fallbackErr) {
+            console.error('OSRM fallback lỗi:', fallbackErr);
+          }
+        }
+      }
+    }
+
+    async function calculateRoutesWithGoogle(apiKey) {
+      // Nếu người dùng nhập địa chỉ/tên địa danh, cho Google tự geocode đầu vào.
+      // Nếu nhập tọa độ hoặc link Google Maps đã được giải mã, dùng lat/lng trực tiếp.
+      const inputA = (document.getElementById('inputA')?.value || '').trim();
+      const inputB = (document.getElementById('inputB')?.value || '').trim();
+      const parsedA = parseCoordsOrUrl(inputA);
+      const parsedB = parseCoordsOrUrl(inputB);
+
+      const origin = parsedA
+        ? { location: { latLng: { latitude: pointA[0], longitude: pointA[1] } } }
+        : { address: inputA || `${pointA[0]},${pointA[1]}` };
+
+      const destination = parsedB
+        ? { location: { latLng: { latitude: pointB[0], longitude: pointB[1] } } }
+        : { address: inputB || `${pointB[0]},${pointB[1]}` };
+
+      const body = {
+        origin,
+        destination,
+        travelMode: 'DRIVE',
+        routingPreference: 'TRAFFIC_AWARE',
+        computeAlternativeRoutes: true,
+        languageCode: 'vi-VN',
+        units: 'METRIC',
+        routeModifiers: {
+          avoidTolls: false,
+          avoidHighways: false,
+          avoidFerries: false
+        },
+        polylineQuality: 'HIGH_QUALITY',
+        polylineEncoding: 'ENCODED_POLYLINE'
+      };
+
+      const fieldMask = [
+        'routes.distanceMeters',
+        'routes.duration',
+        'routes.staticDuration',
+        'routes.description',
+        'routes.routeLabels',
+        'routes.polyline.encodedPolyline',
+        'routes.legs.steps.distanceMeters',
+        'routes.legs.steps.duration',
+        'routes.legs.steps.navigationInstruction'
+      ].join(',');
+
+      const response = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': apiKey,
+          'X-Goog-FieldMask': fieldMask
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+      if (!response.ok || !Array.isArray(data.routes) || data.routes.length === 0) {
+        throw new Error(data?.error?.message || `Google Routes API HTTP ${response.status}`);
+      }
+
+      routesData = data.routes.map((r, index) => ({
+        provider: 'Google',
+        distance: Number(r.distanceMeters || 0),
+        duration: parseGoogleDuration(r.duration),
+        staticDuration: parseGoogleDuration(r.staticDuration),
+        description: r.description || `Google route ${index + 1}`,
+        routeLabels: r.routeLabels || [],
+        geometry: {
+          type: 'LineString',
+          coordinates: decodeGooglePolyline(r.polyline?.encodedPolyline || '')
+            .map(([lat, lng]) => [lng, lat])
+        },
+        legs: r.legs || []
+      }));
+
+      activeRouteIndex = 0;
+      document.getElementById('routeProviderBadge').innerText = 'Google Routes';
+      document.getElementById('routeProviderBadge').className = 'text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold';
+
+      renderRouteLayers();
+      renderRouteListUI();
+
+      const bounds = L.latLngBounds([pointA, pointB]);
+      map.fitBounds(bounds, { padding: [60, 60] });
+    }
+
+    async function calculateRoutesWithOSRM() {
+      const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${pointA[1]},${pointA[0]};${pointB[1]},${pointB[0]}?overview=full&geometries=geojson&alternatives=true`;
+      const res = await fetch(urlOSRM);
+      const data = await res.json();
+
+      if (!data.routes || data.routes.length === 0) {
+        throw new Error('OSRM không trả về tuyến đường');
+      }
+
+      routesData = data.routes.sort((a, b) => a.distance - b.distance);
+      activeRouteIndex = 0;
+
+      document.getElementById('routeProviderBadge').innerText = 'OSM / OSRM miễn phí';
+      document.getElementById('routeProviderBadge').className = 'text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full font-bold';
+
+      renderRouteLayers();
+      renderRouteListUI();
+
+      const bounds = L.latLngBounds([pointA, pointB]);
+      map.fitBounds(bounds, { padding: [60, 60] });
+    }
+
+    function parseGoogleDuration(value) {
+      if (!value) return 0;
+      if (typeof value === 'number') return value;
+      const match = String(value).match(/([\d.]+)s/);
+      return match ? parseFloat(match[1]) : 0;
+    }
+
+    // Google's encoded polyline decoder.
+    function decodeGooglePolyline(encoded) {
+      const result = [];
+      let index = 0, lat = 0, lng = 0;
+
+      while (index < encoded.length) {
+        let shift = 0, resultValue = 0, byte;
+        do {
+          byte = encoded.charCodeAt(index++) - 63;
+          resultValue |= (byte & 0x1f) << shift;
+          shift += 5;
+        } while (byte >= 0x20);
+
+        const deltaLat = (resultValue & 1) ? ~(resultValue >> 1) : (resultValue >> 1);
+        lat += deltaLat;
+
+        shift = 0;
+        resultValue = 0;
+        do {
+          byte = encoded.charCodeAt(index++) - 63;
+          resultValue |= (byte & 0x1f) << shift;
+          shift += 5;
+        } while (byte >= 0x20);
+
+        const deltaLng = (resultValue & 1) ? ~(resultValue >> 1) : (resultValue >> 1);
+        lng += deltaLng;
+
+        result.push([lat / 1e5, lng / 1e5]);
+      }
+
+      return result;
+    }
+
+    function renderRouteLayers() {
+      routeLayersGroup.clearLayers();
+      badgeLayersGroup.clearLayers();
+
+      const routeIndices = routesData.map((_, idx) => idx);
+      routeIndices.sort((a, b) => (a === activeRouteIndex ? 1 : b === activeRouteIndex ? -1 : 0));
+
+      routeIndices.forEach((index) => {
+        const route = routesData[index];
+        const isActive = (index === activeRouteIndex);
+
+        const polyline = L.geoJSON(route.geometry, {
+          style: {
+            color: isActive ? '#2563eb' : '#9ca3af',
+            weight: isActive ? 7 : 5,
+            opacity: isActive ? 0.95 : 0.6
+          }
+        });
+
+        polyline.on('click', () => {
+          selectRoute(index);
+        });
+
+        routeLayersGroup.addLayer(polyline);
+
+        const durationMin = Math.round(route.duration / 60);
+        const hours = Math.floor(durationMin / 60);
+        const mins = durationMin % 60;
+        const timeText = hours > 0 ? `${hours}g ${mins}p` : `${durationMin}p`;
+
+        const coordsLen = route.geometry.coordinates.length;
+        const midIdx = Math.floor(coordsLen / 2);
+        const midCoords = route.geometry.coordinates[midIdx];
+
+        if (midCoords) {
+          const badgeIcon = L.divIcon({
+            className: 'custom-badge-icon',
+            html: `
+              <div class="route-badge ${isActive ? 'active' : ''}" onclick="selectRoute(${index})">
+                <i class="fa-solid fa-car ${isActive ? 'text-blue-600' : 'text-gray-500'}"></i>
+                <span>${timeText}</span>
+              </div>
+            `,
+            iconAnchor: [30, 15]
+          });
+
+          const badgeMarker = L.marker([midCoords[1], midCoords[0]], { icon: badgeIcon });
+          badgeLayersGroup.addLayer(badgeMarker);
+        }
+      });
+
+      updateCardResultInfo();
+    }
+
+    function renderRouteListUI() {
+      const container = document.getElementById('routeOptionsContainer');
+      const listEl = document.getElementById('routeList');
+      const countBadge = document.getElementById('routeCountBadge');
+
+      container.classList.remove('hidden');
+      countBadge.innerText = `${routesData.length} Tuyến`;
+      listEl.innerHTML = '';
+
+      routesData.forEach((route, index) => {
+        const isActive = (index === activeRouteIndex);
+        const roadDistKm = (route.distance / 1000).toFixed(1);
+        const durationMin = Math.round(route.duration / 60);
+        const hours = Math.floor(durationMin / 60);
+        const mins = durationMin % 60;
+        const timeText = hours > 0 ? `${hours}g ${mins}p` : `${durationMin} phút`;
+
+        const summaryName = route.legs[0]?.summary ? `qua ${route.legs[0].summary}` : `Tuyến ${index + 1}`;
+        
+        // Tuyến đầu tiên (index === 0) luôn luôn là Tuyến Ngắn Nhất / Nhanh Nhất sau khi đã Sắp Xếp (Sort)
+        const isFastest = (index === 0);
+
+        const itemHTML = `
+          <div onclick="selectRoute(${index})" 
+               class="p-2.5 rounded-xl border cursor-pointer transition flex items-center justify-between ${
+                 isActive 
+                   ? 'bg-blue-50 border-blue-500 shadow-sm' 
+                   : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+               }">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${
+                isActive ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+              }">
+                Tuyến ${index + 1}
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                  ${summaryName}
+                  ${isFastest ? '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-extrabold px-1.5 py-0.2 rounded">Ngắn nhất</span>' : ''}
+                </div>
+                <div class="text-[11px] text-gray-500 font-medium">
+                  ${roadDistKm} km • ${timeText}
+                </div>
+              </div>
+            </div>
+            <div>
+              <i class="fa-solid ${isActive ? 'fa-circle-check text-blue-600 text-lg' : 'fa-circle text-gray-300 text-lg'}"></i>
+            </div>
+          </div>
+        `;
+
+        listEl.innerHTML += itemHTML;
+      });
+    }
+
+    function selectRoute(index) {
+      if (activeRouteIndex === index) return;
+      activeRouteIndex = index;
+      renderRouteLayers();
+      renderRouteListUI();
+    }
+
+    function updateCardResultInfo() {
+      const activeRoute = routesData[activeRouteIndex];
+      if (!activeRoute) return;
+
+      const roadDistKm = (activeRoute.distance / 1000).toFixed(1);
+      const durationMin = Math.round(activeRoute.duration / 60);
+      const hours = Math.floor(durationMin / 60);
+      const mins = durationMin % 60;
+
+      document.getElementById('distRoad').innerText = `${roadDistKm} km`;
+      document.getElementById('distTime').innerText = hours > 0 ? `${hours} giờ ${mins} phút` : `${durationMin} phút`;
+
+      updateResultStatus(parseFloat(roadDistKm) <= radiusKm);
+    }
+
+    function updateResultStatus(isInside) {
+      const card = document.getElementById('resultCard');
+      const badge = document.getElementById('statusBadge');
+
+      if (isInside) {
+        card.className = "p-4 rounded-xl border-2 transition-all duration-300 bg-emerald-50 border-emerald-500";
+        badge.className = "text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-600 text-white";
+        badge.innerText = "NẰM TRONG BÁN KÍNH";
+      } else {
+        card.className = "p-4 rounded-xl border-2 transition-all duration-300 bg-rose-50 border-rose-500";
+        badge.className = "text-xs px-2.5 py-1 rounded-full font-bold bg-rose-600 text-white";
+        badge.innerText = "NẰM NGOÀI BÁN KÍNH";
+      }
+    }
+
+    function updateRadius(val) {
+      radiusKm = parseFloat(val);
+      document.getElementById('radiusVal').innerText = `${radiusKm} km`;
+      updateUI();
+    }
+
+    function setSelectMode(mode) {
+      selectMode = mode;
+      resetSelectButtons();
+      if (mode === 'A') {
+        document.getElementById('btnSelectA').className = "py-2 px-3 border border-blue-600 bg-blue-600 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5";
+      } else if (mode === 'B') {
+        document.getElementById('btnSelectB').className = "py-2 px-3 border border-rose-600 bg-rose-600 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5";
+      }
+    }
+
+    function resetSelectButtons() {
+      document.getElementById('btnSelectA').className = "py-2 px-3 border border-blue-500 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-50 transition flex items-center justify-center gap-1.5";
+      document.getElementById('btnSelectB').className = "py-2 px-3 border border-rose-500 text-rose-600 rounded-lg text-xs font-semibold hover:bg-rose-50 transition flex items-center justify-center gap-1.5";
+    }
+
+    function changeMapTile(type) {
+      if (tileLayer) map.removeLayer(tileLayer);
+      tileLayer = L.tileLayer(MAP_TILES[type], {
+        maxZoom: 20,
+        subdomains: ['a', 'b', 'c', 'd'],
+        attribution: '© Google Maps / CartoDB'
+      }).addTo(map);
+    }
+
+    // ===== GHI NHỚ ĐIỂM A =====
+    function isGoogleMapsUrl(value) {
+      return /(?:google\.[^/]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps)/i.test(value || '');
+    }
+
+    function isCoordinateText(value) {
+      return /^\s*-?\d+(?:\.\d+)?[\s,]+-?\d+(?:\.\d+)?\s*$/.test(value || '');
+    }
+
+    // Lấy tên ngắn từ link Google Maps, ví dụ:
+    // https://www.google.com/maps/place/Ng%C3%A3+T%C6%B0+...
+    function extractGooglePlaceName(value) {
+      if (!value) return '';
+      try {
+        const match = value.match(/\/maps\/place\/([^/@?]+)/i);
+        if (match && match[1]) {
+          const decoded = decodeURIComponent(match[1])
+            .replace(/\+/g, ' ')
+            .trim();
+          if (decoded) return decoded;
+        }
+      } catch (e) {}
+      return '';
+    }
+
+    function makeSavedPointLabel(currentInput) {
+      const value = (currentInput || '').trim();
+
+      if (isGoogleMapsUrl(value)) {
+        const placeName = extractGooglePlaceName(value);
+        if (placeName) return placeName;
+        return `Điểm A (${pointA[0].toFixed(4)}, ${pointA[1].toFixed(4)})`;
+      }
+
+      if (isCoordinateText(value)) {
+        return `Điểm A (${pointA[0].toFixed(4)}, ${pointA[1].toFixed(4)})`;
+      }
+
+      return value || `Điểm A (${pointA[0].toFixed(4)}, ${pointA[1].toFixed(4)})`;
+    }
+
+    function saveGoogleRoutesKey() {
+      const key = (document.getElementById('googleRoutesKey').value || '').trim();
+      if (!key) {
+        localStorage.removeItem('google_routes_api_key');
+        updateRouteProviderBadge();
+        alert('Đã xóa Google Routes API Key. Ứng dụng sẽ dùng OSM/OSRM miễn phí.');
+        return;
+      }
+      localStorage.setItem('google_routes_api_key', key);
+      updateRouteProviderBadge();
+      alert('Đã lưu Google Routes API Key trên trình duyệt này.');
+      if (pointA && pointB) calculateRoutes();
+    }
+
+    function updateRouteProviderBadge() {
+      const hasKey = !!(localStorage.getItem('google_routes_api_key') || document.getElementById('googleRoutesKey')?.value || '').trim();
+      const badge = document.getElementById('routeProviderBadge');
+      if (!badge) return;
+      if (hasKey) {
+        badge.innerText = 'Google Routes';
+        badge.className = 'text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold';
+      } else {
+        badge.innerText = 'OSM miễn phí';
+        badge.className = 'text-[10px] bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full font-bold';
+      }
+    }
+
+    function openGoogleDirections() {
+      if (!pointA || !pointB) {
+        alert('Vui lòng chọn cả Điểm A và Điểm B trước.');
+        return;
+      }
+
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(pointA[0] + ',' + pointA[1])}&destination=${encodeURIComponent(pointB[0] + ',' + pointB[1])}&travelmode=driving`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function saveCurrentPointA() {
+      if (!pointA) {
+        alert('Vui lòng chọn Điểm A trước.');
+        return;
+      }
+
+      const currentInput = document.getElementById('inputA').value.trim();
+      const suggestedName = makeSavedPointLabel(currentInput);
+
+      // Bạn có thể đặt tên riêng: Nhà, Kho Đà Nẵng, Cửa hàng 1...
+      const name = prompt(
+        'Nhập tên gợi nhớ cho Điểm A (tên này sẽ hiện trong danh sách):',
+        suggestedName
+      );
+
+      if (name === null) return;
+
+      const cleanName = name.trim() || suggestedName;
+      let savedList = JSON.parse(localStorage.getItem('saved_points_A') || '[]');
+
+      savedList.push({
+        name: cleanName,
+        coords: [...pointA],
+        address: currentInput,
+        source: currentInput,
+        createdAt: Date.now()
+      });
+
+      localStorage.setItem('saved_points_A', JSON.stringify(savedList));
+      loadSavedPointsAFromStorage();
+
+      const select = document.getElementById('savedPointsA');
+      select.value = String(savedList.length - 1);
+      document.getElementById('btnDeleteA').classList.remove('hidden');
+
+      alert(`Đã ghi nhớ "${cleanName}"!`);
+    }
+
+    function getSafeSavedPointName(item) {
+      if (!item) return 'Điểm A';
+
+      const name = String(item.name || '').trim();
+
+      // Tương thích với các điểm đã lưu từ phiên bản cũ:
+      // nếu tên cũ chính là URL Google Maps thì tự rút gọn.
+      if (isGoogleMapsUrl(name)) {
+        const extracted = extractGooglePlaceName(name);
+        if (extracted) return extracted;
+        return `Điểm A (${(item.coords?.[0] ?? 0).toFixed(4)}, ${(item.coords?.[1] ?? 0).toFixed(4)})`;
+      }
+
+      return name || `Điểm A (${(item.coords?.[0] ?? 0).toFixed(4)}, ${(item.coords?.[1] ?? 0).toFixed(4)})`;
+    }
+
+    function loadSavedPointsAFromStorage() {
+      const select = document.getElementById('savedPointsA');
+      const savedList = JSON.parse(localStorage.getItem('saved_points_A') || '[]');
+
+      select.innerHTML = '<option value="">-- Chọn điểm A đã ghi nhớ --</option>';
+
+      savedList.forEach((item, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = getSafeSavedPointName(item);
+        opt.title = getSafeSavedPointName(item);
+        select.appendChild(opt);
+      });
+
+      document.getElementById('btnDeleteA').classList.add('hidden');
+    }
+
+    function loadSelectedPointA(index) {
+      if (index === '') {
+        document.getElementById('btnDeleteA').classList.add('hidden');
+        return;
+      }
+
+      const savedList = JSON.parse(localStorage.getItem('saved_points_A') || '[]');
+      const selected = savedList[index];
+
+      if (selected && Array.isArray(selected.coords)) {
+        // Giữ lại link/địa chỉ/tọa độ gốc trong ô nhập.
+        setPointA(selected.coords, selected.source || selected.address || selected.name);
+        map.setView(selected.coords, 15);
+        document.getElementById('btnDeleteA').classList.remove('hidden');
+      }
+    }
+
+    function deleteSelectedPointA() {
+      const select = document.getElementById('savedPointsA');
+      const index = select.value;
+      if (index === '') return;
+
+      if (confirm('Bạn có chắc muốn xóa vị trí này khỏi danh sách ghi nhớ?')) {
+        let savedList = JSON.parse(localStorage.getItem('saved_points_A') || '[]');
+        savedList.splice(index, 1);
+        localStorage.setItem('saved_points_A', JSON.stringify(savedList));
+        loadSavedPointsAFromStorage();
+      }
+    }
+
+    function resetApp() {
+      pointA = null; pointB = null;
+      if (markerA) map.removeLayer(markerA);
+      if (markerB) map.removeLayer(markerB);
+      if (radiusLayer) map.removeLayer(radiusLayer);
+      routeLayersGroup.clearLayers();
+      badgeLayersGroup.clearLayers();
+
+      document.getElementById('coordsA').innerText = 'Chưa chọn';
+      document.getElementById('coordsB').innerText = 'Chưa chọn';
+      document.getElementById('inputA').value = '';
+      document.getElementById('inputB').value = '';
+      document.getElementById('distGeodesic').innerText = '-- km';
+      document.getElementById('distRoad').innerText = '-- km';
+      document.getElementById('distTime').innerText = '-- phút';
+      document.getElementById('statusBadge').innerText = 'Vui lòng chọn A & B';
+      document.getElementById('statusBadge').className = 'text-xs px-2.5 py-1 rounded-full font-bold bg-gray-200 text-gray-700';
+      document.getElementById('resultCard').className = 'p-4 rounded-xl border-2 transition-all duration-300 bg-gray-50 border-gray-200';
+      document.getElementById('saveBoxA').classList.add('hidden');
+      document.getElementById('routeOptionsContainer').classList.add('hidden');
+
+      map.setView([12.4, 109.2], 10);
+    }
+  </script>
+</body>
+</html>

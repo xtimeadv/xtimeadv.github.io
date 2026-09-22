@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Truyền Thông & Quảng Cáo | Performance Marketing</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#0f172a',
+                            dark: '#090d16',
+                            card: '#131b2e',
+                            border: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        /* Dropdown transition */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease-in-out;
+        }
+        .has-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-50 bg-[#090d16]/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div id="site-logo-container">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-indigo-500/30">
+                            X
+                        </div>
+                    </div>
+                    <div>
+                        <span id="site-brand-name" class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-indigo-300">
+                            XTIME AGENCY
+                        </span>
+                        <span class="block text-[10px] text-indigo-400 font-semibold tracking-widest uppercase">Media & Performance</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1" id="main-nav-container">
+                    <!-- Rendered via JavaScript -->
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="openModal('quote-modal')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm transition-all shadow-lg shadow-indigo-600/25 active:scale-95">
+                        Nhận Báo Giá
+                    </button>
+                    <button onclick="toggleAdminView()" id="admin-toggle-btn" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700/50" title="Trang Quản Trị Admin">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main id="app-viewport" class="flex-grow">
+        <!-- Dynamic content render by JS (Home, Custom Page, Admin Dashboard) -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800/60">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white">X</div>
+                        <span class="text-lg font-bold text-white tracking-wider">XTIME MEDIA</span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Giải pháp truyền thông toàn diện & tối ưu quảng cáo chuyển đổi Performance Marketing hàng đầu cho doanh nghiệp.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm tracking-wider uppercase">Dịch Vụ Nổi Bật</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#" onclick="navigateTo('home')" class="hover:text-indigo-400 transition-colors">Quảng Cáo Performance Ads</a></li>
+                        <li><a href="#" onclick="navigateTo('home')" class="hover:text-indigo-400 transition-colors">Xây Dựng Thương Hiệu</a></li>
+                        <li><a href="#" onclick="navigateTo('home')" class="hover:text-indigo-400 transition-colors">Sản Xuất Video TikTok / Reels</a></li>
+                        <li><a href="#" onclick="navigateTo('home')" class="hover:text-indigo-400 transition-colors">SEO Website Tổng Thể</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm tracking-wider uppercase">Liên Kết Nhanh</h4>
+                    <ul class="space-y-2 text-sm text-slate-400" id="footer-nav-links">
+                        <!-- Rendered dynamically -->
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm tracking-wider uppercase">Liên Hệ Tấn Công</h4>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-location-dot mt-1 text-indigo-400"></i>
+                            <span>Tầng 8, Tòa nhà Media Center, Quận Cầu Giấy, Hà Nội</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fa-solid fa-phone text-indigo-400"></i>
+                            <span>Hotline: 0988.123.456</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fa-solid fa-envelope text-indigo-400"></i>
+                            <span>Email: contact@xtime.vn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 XTime Agency. Tất cả quyền được bảo lưu.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-slate-400">Bảo mật thông tin</a>
+                    <a href="#" class="hover:text-slate-400">Điều khoản dịch vụ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: BÁO GIÁ DỊCH VỤ -->
+    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 relative shadow-2xl">
+            <button onclick="closeModal('quote-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-white mb-2">Đăng Ký Tư Vấn & Báo Giá</h3>
+            <p class="text-slate-400 text-sm mb-6">Để lại thông tin, đội ngũ Chuyên gia XTime sẽ tư vấn cho bạn trong 15 phút.</p>
+
+            <form onsubmit="handleQuoteSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Họ và tên *</label>
+                    <input type="text" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500" placeholder="Nguyễn Văn A">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Số điện thoại / Zalo *</label>
+                    <input type="tel" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500" placeholder="0901 234 567">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Dịch vụ quan tâm</label>
+                    <select class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                        <option>Tối ưu Quảng cáo Performance (FB/Google/TikTok)</option>
+                        <option>Xây dựng kênh TikTok / Youtube Reels</option>
+                        <option>SEO & Thiết kế Website Chuyển đổi</option>
+                        <option>Tư vấn Chiến lược Marketing Tổng thể</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Ngân sách dự kiến / tháng</label>
+                    <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500" placeholder="Ví dụ: 20 triệu - 50 triệu">
+                </div>
+                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 font-semibold text-white rounded-xl shadow-lg shadow-indigo-600/30 transition-all mt-2">
+                    Gửi Yêu Cầu Báo Giá
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN ADMIN -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-2xl text-white mx-auto mb-3">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Đăng Nhập Quản Trị</h3>
+                <p class="text-xs text-slate-400 mt-1">Mặc định: admin@xtime.vn / admin123</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Email Quản Trị</label>
+                    <input type="email" id="login-email" required value="admin@xtime.vn" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Mật khẩu</label>
+                    <input type="password" id="login-password" required value="admin123" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 font-semibold text-white rounded-xl shadow-lg transition-all">
+                    Đăng Nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP STATE & LOGIC -->
+    <script>
+        // DATA INITIALIZATION IN LOCALSTORAGE
+        const defaultData = {
+            isAdminLoggedIn: false,
+            activePage: 'home',
+            menus: [
+                { id: 'm1', title: 'Trang chủ', parentId: null, externalUrl: '', isExternal: false, order: 1 },
+                { id: 'm2', title: 'Giới thiệu', parentId: null, externalUrl: '', isExternal: false, order: 2 },
+                { id: 'm3', title: 'Dịch vụ', parentId: null, externalUrl: '', isExternal: false, order: 3 },
+                { id: 'm3_1', title: 'Quảng cáo Performance', parentId: 'm3', externalUrl: '', isExternal: false, order: 1 },
+                { id: 'm3_2', title: 'Xây dựng Kênh TikTok', parentId: 'm3', externalUrl: '', isExternal: false, order: 2 },
+                { id: 'm3_3', title: 'Thiết kế Website & SEO', parentId: 'm3', externalUrl: '', isExternal: false, order: 3 },
+                { id: 'm4', title: 'Dự án', parentId: null, externalUrl: '', isExternal: false, order: 4 },
+                { id: 'm5', title: 'Blog Marketing', parentId: null, externalUrl: 'https://facebook.com', isExternal: true, order: 5 },
+                { id: 'm6', title: 'Liên hệ', parentId: null, externalUrl: '', isExternal: false, order: 6 }
+            ],
+            pagesContent: {
+                'm2': {
+                    title: 'Về Chúng Tôi - XTime Agency',
+                    subtitle: 'Đơn vị đi đầu trong giải pháp truyền thông và tối ưu chuyển đổi số',
+                    bannerImg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">XTime Agency được thành lập với sứ mệnh mang tới các giải pháp truyền thông thực chiến, tập trung đo lường bằng hiệu quả doanh thu thực tế cho khách hàng.</p>
+                              <p class="mb-4">Với hơn 5 năm kinh nghiệm và hơn 300+ dự án đã triển khai thành công, chúng tôi đồng hành cùng doanh nghiệp từ khâu lập chiến lược, sản xuất nội dung đến tối ưu hóa chi phí quảng cáo (CPA, ROAS).</p>
+                              <h3 class="text-xl font-bold text-white mt-6 mb-3">Tầm nhìn & Sứ mệnh</h3>
+                              <p>Trở thành Performance Marketing Agency hàng đầu tại Việt Nam, mang đến giải pháp toàn diện giúp doanh nghiệp bứt phá doanh số bền vững trên không gian số.</p>`
+                },
+                'm3': {
+                    title: 'Dịch Vụ Marketing Toàn Diện',
+                    subtitle: 'Tối đa hóa lợi nhuận với các giải pháp truyền thông chuyên sâu',
+                    bannerImg: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Chúng tôi cung cấp hệ sinh thái dịch vụ Marketing tích hợp giúp doanh nghiệp tiếp cận đúng khách hàng mục tiêu và gia tăng tỷ lệ chuyển đổi mua hàng.</p>
+                              <ul class="list-disc pl-6 space-y-2 mb-4">
+                                  <li>Quảng cáo đa nền tảng (Facebook, Google, TikTok, Shopee Ads).</li>
+                                  <li>Xây dựng thương hiệu và sản xuất hình ảnh/video chuyên nghiệp.</li>
+                                  <li>Thiết kế Landing Page / Website bán hàng tối ưu SEO.</li>
+                              </ul>`
+                },
+                'm3_1': {
+                    title: 'Dịch Vụ Quảng Cáo Performance Ads',
+                    subtitle: 'Tối ưu chi phí CPA - Tăng trưởng chỉ số ROAS x3 x5',
+                    bannerImg: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Giải pháp chạy quảng cáo chuyên sâu tập trung vào đo lường đơn hàng và doanh thu. XTime cam kết chỉ số KPIs rõ ràng trước khi triển khai.</p>
+                              <p class="mb-4">Phân tích dữ liệu tệp khách hàng sâu, sáng tạo A/B Testing liên tục để tìm ra mẫu quảng cáo có chi phí rẻ nhất và tỷ lệ chốt đơn cao nhất.</p>`
+                },
+                'm3_2': {
+                    title: 'Xây Dựng Kênh TikTok / Reels Triệu View',
+                    subtitle: 'Định hình phong cách thương hiệu & Thu hút lượng lớn khách hàng tự nhiên',
+                    bannerImg: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Xây dựng kịch bản chuẩn xu hướng, sản xuất video ngắn chất lượng cao giúp kênh đạt hàng triệu lượt xem và gia tăng đơn hàng chuyển đổi qua TikTok Shop / Bio link.</p>`
+                },
+                'm3_3': {
+                    title: 'Thiết Kế Website & SEO Tổng Thể',
+                    subtitle: 'Thăng hạng từ khóa bền vững trên Google Search',
+                    bannerImg: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Xây dựng giao diện chuẩn UX/UI giúp tăng tỷ lệ giữ chân người dùng và chốt đơn ngay trên website. Đưa hàng trăm từ khóa ngành lên Top Google.</p>`
+                },
+                'm4': {
+                    title: 'Dự Án Tiêu Biểu Bứt Phá Doanh Số',
+                    subtitle: 'Các câu chuyện thành công từ đối tác của XTime Agency',
+                    bannerImg: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Tổng hợp các chiến dịch thực chiến mà XTime đã mang lại doanh thu đột phá cho các ngành hàng Thời trang, Bất động sản, F&B, Thẩm mỹ viện...</p>`
+                },
+                'm6': {
+                    title: 'Liên Hệ Với Đội Ngũ XTime',
+                    subtitle: 'Chúng tôi luôn sẵn sàng lắng nghe bài toán truyền thông của bạn',
+                    bannerImg: 'https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1200&q=80',
+                    content: `<p class="mb-4">Địa chỉ văn phòng: Tầng 8, Tòa nhà Media Center, Cầu Giấy, Hà Nội.</p>
+                              <p class="mb-4">Hotline hỗ trợ 24/7: 0988.123.456 | Email: contact@xtime.vn</p>`
+                }
+            },
+            services: [
+                { id: 's1', name: 'Quảng Cáo Performance Ads', desc: 'Tối ưu ngân sách Facebook, Google, TikTok Ads tối đa hóa chuyển đổi ROI.', icon: 'fa-rectangle-ad', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80', linkMenuId: 'm3_1' },
+                { id: 's2', name: 'Xây Kênh TikTok / Reels', desc: 'Sản xuất video ngắn triệu view, xây dựng nhận diện thương hiệu phủ sóng.', icon: 'fa-video', image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=600&q=80', linkMenuId: 'm3_2' },
+                { id: 's3', name: 'SEO & Thiết Kế Website', desc: 'Thiết kế website bán hàng cao cấp, tối ưu trải nghiệm và đưa từ khóa lên Top.', icon: 'fa-code', image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80', linkMenuId: 'm3_3' }
+            ]
+        };
+
+        // Get State from LocalStorage or initialize default
+        function getState() {
+            const data = localStorage.getItem('xtime_agency_state');
+            if (!data) {
+                localStorage.setItem('xtime_agency_state', JSON.stringify(defaultData));
+                return defaultData;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveState(state) {
+            localStorage.setItem('xtime_agency_state', JSON.stringify(state));
+            renderNavigation();
+            renderViewport();
+        }
+
+        // INITIAL RENDERING ON LOAD
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNavigation();
+            renderViewport();
+        });
+
+        // RENDER HEADER NAVIGATION (Supports Submenus / Dropdowns)
+        function renderNavigation() {
+            const state = getState();
+            const navContainer = document.getElementById('main-nav-container');
+            const footerNavContainer = document.getElementById('footer-nav-links');
+            
+            navContainer.innerHTML = '';
+            footerNavContainer.innerHTML = '';
+
+            // Filter Top Level Menus
+            const parentMenus = state.menus.filter(m => !m.parentId).sort((a,b) => a.order - b.order);
+
+            parentMenus.forEach(menu => {
+                const subMenus = state.menus.filter(m => m.parentId === menu.id).sort((a,b) => a.order - b.order);
+                const hasSub = subMenus.length > 0;
+
+                // Create Top Level Item
+                const navItem = document.createElement('div');
+                navItem.className = `relative ${hasSub ? 'has-dropdown group' : ''}`;
+
+                let activeClass = state.activePage === menu.id ? 'bg-slate-800 text-indigo-400 font-semibold' : 'text-slate-300 hover:text-white hover:bg-slate-800/50';
+
+                let html = '';
+                if (hasSub) {
+                    html = `
+                        <button onclick="handleMenuClick('${menu.id}')" class="px-3.5 py-2 rounded-xl text-sm transition-all flex items-center space-x-1 ${activeClass}">
+                            <span>${menu.title}</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] ml-1 transition-transform group-hover:rotate-180 text-slate-400"></i>
+                        </button>
+                        <!-- Dropdown Submenu -->
+                        <div class="dropdown-menu absolute top-full left-0 w-56 pt-2 z-50">
+                            <div class="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-2 space-y-1">
+                                ${subMenus.map(sub => `
+                                    <a href="#" onclick="handleMenuClick('${sub.id}', event)" class="block px-3 py-2 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-indigo-600/20 hover:border-l-2 hover:border-indigo-500 transition-all flex items-center justify-between">
+                                        <span>${sub.title}</span>${sub.isExternal ? '<i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>' : ''}
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html = `
+                        <a href="#" onclick="handleMenuClick('${menu.id}', event)" class="px-3.5 py-2 rounded-xl text-sm transition-all flex items-center space-x-1 ${activeClass}">
+                            <span>${menu.title}</span>
+                            ${menu.isExternal ? '<i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1 text-slate-500"></i>' : ''}
+                        </a>
+                    `;
+                }
+
+                navItem.innerHTML = html;
+                navContainer.appendChild(navItem);
+
+                // Footer links
+                const fItem = document.createElement('li');
+                fItem.innerHTML = `<a href="#" onclick="handleMenuClick('${menu.id}', event)" class="hover:text-indigo-400 transition-colors">${menu.title}</a>`;
+                footerNavContainer.appendChild(fItem);
+            });
+        }
+
+        // HANDLE MENU NAVIGATION CLICK
+        function handleMenuClick(menuId, event) {
+            if (event) event.preventDefault();
+            const state = getState();
+            const menu = state.menus.find(m => m.id === menuId);
+
+            if (!menu) return;
+
+            // If it is an external link
+            if (menu.isExternal && menu.externalUrl) {
+                window.open(menu.externalUrl, '_blank');
+                return;
+            }
+
+            // Navigate to dynamic internal page
+            state.activePage = menuId;
+            saveState(state);
+        }
+
+        function navigateTo(pageId) {
+            const state = getState();
+            state.activePage = pageId;
+            saveState(state);
+        }
+
+        // VIEWPORT ROUTER RENDERER
+        function renderViewport() {
+            const state = getState();
+            const viewport = document.getElementById('app-viewport');
+            viewport.innerHTML = '';
+
+            if (state.activePage === 'admin') {
+                if (!state.isAdminLoggedIn) {
+                    openModal('login-modal');
+                    state.activePage = 'home';
+                    saveState(state);
+                    return;
+                }
+                renderAdminDashboard(viewport);
+                return;
+            }
+
+            if (state.activePage === 'home') {
+                renderHomePage(viewport);
+                return;
+            }
+
+            // Render Dynamic Page for created menus
+            renderDynamicPage(viewport, state.activePage);
+        }
+
+        // 1. RENDER HOME PAGE
+        function renderHomePage(container) {
+            const state = getState();
+            container.innerHTML = `
+                <!-- HERO SECTION -->
+                <section class="relative py-20 md:py-32 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/20 via-transparent to-[#090d16] pointer-events-none"></div>
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                        <span class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold uppercase tracking-widest mb-6">
+                            <i class="fa-solid fa-bolt text-indigo-400"></i> Performance Marketing Agency
+                        </span>
+                        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto">
+                            Tối Ưu Ngân Sách Quảng Cáo & <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-violet-400 to-pink-400">Bứt Phá Doanh Số</span>
+                        </h1>
+                        <p class="mt-6 text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                            XTime Agency đồng hành cùng doanh nghiệp xây dựng chiến lược truyền thông toàn diện, sản xuất nội dung sáng tạo và tối ưu hóa chuyển đổi thực tế.
+                        </p>
+                        <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+                            <button onclick="openModal('quote-modal')" class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base transition-all shadow-xl shadow-indigo-600/30">
+                                Nhận Tư Vấn Miễn Phí <i class="fa-solid fa-arrow-right ml-2"></i>
+                            </button>
+                            <button onclick="navigateTo('m2')" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-base border border-slate-700 transition-all">
+                                Khám Phá XTime
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SERVICES SECTION -->
+                <section class="py-16 bg-slate-900/50 border-y border-slate-800/80">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl font-bold text-white tracking-tight">Giải Pháp Dịch Vụ Của Chúng Tôi</h2>
+                            <p class="text-slate-400 mt-2 text-sm">Được thiết kế linh hoạt theo mục tiêu tăng trưởng từng giai đoạn của doanh nghiệp</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            ${state.services.map(svc => `
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition-all group flex flex-col justify-between">
+                                    <div class="relative h-48 overflow-hidden">
+                                        <img src="${svc.image}" alt="${svc.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                                        <div class="absolute top-4 left-4 w-10 h-10 rounded-xl bg-indigo-600/90 text-white flex items-center justify-center shadow-lg">
+                                            <i class="fa-solid ${svc.icon}"></i>
+                                        </div>
+                                    </div>
+                                    <div class="p-6 flex-grow flex flex-col justify-between">
+                                        <div>
+                                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">${svc.name}</h3>
+                                            <p class="text-slate-400 text-sm leading-relaxed mb-6">${svc.desc}</p>
+                                        </div>
+                                        <button onclick="navigateTo('${svc.linkMenuId || 'm3'}')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-medium text-sm transition-all text-center flex items-center justify-center space-x-2">
+                                            <span>Xem Chi Tiết Dịch Vụ</span>
+                                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        // 2. RENDER DYNAMIC PAGE FOR NAVIGATION MENUS
+        function renderDynamicPage(container, menuId) {
+            const state = getState();
+            const menu = state.menus.find(m => m.id === menuId);
+            const pageData = state.pagesContent[menuId] || {
+                title: menu ? menu.title : 'Trang Nội Dung',
+                subtitle: 'Nội dung chi tiết được biên soạn bởi quản trị viên',
+                bannerImg: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
+                content: '<p class="text-slate-400">Chưa có nội dung chi tiết cho trang này. Quản trị viên vui lòng vào mục Admin để cập nhật nội dung.</p>'
+            };
+
+            container.innerHTML = `
+                <!-- Dynamic Page Banner -->
+                <section class="relative py-16 bg-slate-900 border-b border-slate-800">
+                    <div class="absolute inset-0 opacity-20">
+                        <img src="${pageData.bannerImg}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div class="flex items-center space-x-2 text-xs text-indigo-400 mb-3">
+                            <span class="cursor-pointer hover:underline" onclick="navigateTo('home')">Trang chủ</span>
+                            <span>/</span>
+                            <span class="text-slate-300">${menu ? menu.title : 'Trang nội dung'}</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">${pageData.title}</h1>
+                        <p class="mt-3 text-slate-400 text-base max-w-2xl">${pageData.subtitle}</p>
+                    </div>
+                </section>
+
+                <!-- Main Content Body -->
+                <section class="py-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6 sm:p-10 shadow-xl prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
+                        ${pageData.content}
+                    </div>
+
+                    <!-- Call To Action Box -->
+                    <div class="mt-12 bg-gradient-to-r from-indigo-900/40 to-violet-900/40 border border-indigo-500/30 rounded-2xl p-8 text-center relative overflow-hidden">
+                        <h3 class="text-2xl font-bold text-white mb-2">Bạn Cần Tư Vấn Riêng Cho Chiến Dịch Này?</h3>
+                        <p class="text-slate-300 text-sm max-w-xl mx-auto mb-6">Đội ngũ chuyên gia XTime sẽ phân tích bài toán và đề xuất lộ trình tối ưu cho doanh nghiệp của bạn.</p>
+                        <button onclick="openModal('quote-modal')" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all">
+                            Liên Hệ Ngay Vẫn Còn Ưu Đãi
+                        </button>
+                    </div>
+                </section>
+            `;
+        }
+
+        // 3. RENDER ADMIN DASHBOARD CMS
+        function renderAdminDashboard(container) {
+            const state = getState();
+            
+            container.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <!-- Dashboard Header -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4 mb-8">
+                        <div>
+                            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-indigo-500"></i> Bảng Quản Trị Hệ Thống CMS
+                            </h1>
+                            <p class="text-xs text-slate-400 mt-1">Quản lý cấu hình Menu, Dịch vụ, và Biên soạn nội dung Trang động</p>
+                        </div>
+                        <button onclick="handleAdminLogout()" class="px-4 py-2 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 rounded-xl text-xs font-semibold transition-all w-fit">
+                            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Đăng Xuất Admin
+                        </button>
+                    </div>
+
+                    <!-- Tabs Navigation -->
+                    <div class="flex space-x-2 border-b border-slate-800 mb-8 overflow-x-auto pb-2" id="admin-tabs">
+                        <button onclick="switchAdminTab('menu-tab')" id="tab-btn-menu-tab" class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs font-semibold transition-all bg-indigo-600 text-white">
+                            <i class="fa-solid fa-sitemap mr-2"></i> Quản Lý Menu Navigation
+                        </button>
+                        <button onclick="switchAdminTab('pages-tab')" id="tab-btn-pages-tab" class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs font-semibold transition-all bg-slate-800 text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-file-pen mr-2"></i> Biên Soạn Trang Động
+                        </button>
+                        <button onclick="switchAdminTab('services-tab')" id="tab-btn-services-tab" class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs font-semibold transition-all bg-slate-800 text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-cubes mr-2"></i> Quản Lý Dịch Vụ
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: MENU MANAGEMENT -->
+                    <div id="admin-content-menu-tab" class="admin-tab-content space-y-8">
+                        <!-- Add/Edit Menu Form -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-plus-circle text-indigo-400"></i> Thêm / Chỉnh Sửa Mục Menu
+                            </h3>
+                            <form onsubmit="saveMenuItem(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="hidden" id="menu-edit-id" value="">
+                                
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Tên Menu Display *</label>
+                                    <input type="text" id="menu-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500" placeholder="Ví dụ: Dịch vụ SEO">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Thuộc Menu Cha (Tạo Thư Mục Con)</label>
+                                    <select id="menu-parent-id" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500">
+                                        <option value="">-- Là Menu Chính (Không có cha) --</option>
+                                        ${state.menus.filter(m => !m.parentId).map(m => `<option value="${m.id}">${m.title}</option>`).join('')}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Liên Kết Ngoài (Nếu có)</label>
+                                    <input type="url" id="menu-external-url" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500" placeholder="https://example.com (Bỏ trống nếu tạo trang nội bộ)">
+                                </div>
+
+                                <div class="md:col-span-3 flex justify-end space-x-3 pt-2">
+                                    <button type="button" onclick="resetMenuForm()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs hover:bg-slate-700">Hủy / Làm mới</button>
+                                    <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-indigo-600/30">Lưu Mục Menu</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Menu Table List -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                            <div class="p-4 border-b border-slate-800 font-bold text-sm text-white">Danh Sách Cấu Trúc Menu Hiện Tại</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs text-slate-300">
+                                    <thead class="bg-slate-800/60 text-slate-400 uppercase text-[10px]">
+                                        <tr>
+                                            <th class="p-3">Tên Menu</th>
+                                            <th class="p-3">Loại Menu</th>
+                                            <th class="p-3">Đường Dẫn / Trang Động</th>
+                                            <th class="p-3 text-right">Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800">
+                                        ${state.menus.map(m => {
+                                            const parent = state.menus.find(p => p.id === m.parentId);
+                                            return `
+                                                <tr class="hover:bg-slate-800/30">
+                                                    <td class="p-3 font-medium text-white flex items-center space-x-2">
+                                                        ${m.parentId ? '<span class="text-indigo-400 pl-4">└─</span>' : ''}
+                                                        <span>${m.title}</span>
+                                                    </td>
+                                                    <td class="p-3">
+                                                        ${m.parentId ? `<span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/50">Con (${parent ? parent.title : ''})</span>` : '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Menu Chính</span>'}
+                                                    </td>
+                                                    <td class="p-3 text-slate-400">
+                                                        ${m.isExternal ? `<span class="text-amber-400"><i class="fa-solid fa-link mr-1"></i>${m.externalUrl}</span>` : `<span class="text-emerald-400"><i class="fa-solid fa-file-code mr-1"></i>Trang Động Tự Động</span>`}
+                                                    </td>
+                                                    <td class="p-3 text-right space-x-2">
+                                                        <button onclick="editMenuItem('${m.id}')" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-indigo-400 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                        <button onclick="deleteMenuItem('${m.id}')" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-rose-400 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: PAGE BUILDER EDITING -->
+                    <div id="admin-content-pages-tab" class="admin-tab-content hidden space-y-6">
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                            <h3 class="text-base font-bold text-white mb-4">Biên Soạn Nội Dung Trang Động</h3>
+                            
+                            <div class="mb-6">
+                                <label class="block text-xs text-slate-400 mb-1">Chọn Trang Cần Chỉnh Sửa Content *</label>
+                                <select id="page-select-id" onchange="loadPageContentToEdit()" class="w-full md:w-1/2 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500">
+                                    ${state.menus.filter(m => !m.isExternal).map(m => `<option value="${m.id}">${m.title} (${m.parentId ? 'Menu con' : 'Menu chính'})</option>`).join('')}
+                                </select>
+                            </div>
+
+                            <form onsubmit="savePageContent(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Tiêu Đề Trang (Title Banner) *</label>
+                                    <input type="text" id="page-edit-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Mô Tả Ngắn (Subtitle) *</label>
+                                    <input type="text" id="page-edit-subtitle" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500">
+                                </div>
+
+                                <!-- Image Upload Option -->
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Hình Ảnh Banner Trang</label>
+                                    <div class="flex flex-col sm:flex-row gap-2">
+                                        <input type="text" id="page-edit-banner" class="flex-grow bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-indigo-500" placeholder="URL hình ảnh banner">
+                                        <label class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs rounded-xl cursor-pointer flex items-center justify-center space-x-1">
+                                            <i class="fa-solid fa-upload text-indigo-400"></i>
+                                            <span>Tải ảnh từ máy</span>
+                                            <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'page-edit-banner')">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Nội Dung Chi Tiết Trang (Hỗ trợ thẻ HTML như &lt;p&gt;, &lt;h3&gt;, &lt;ul&gt;, &lt;img&gt;...) *</label>
+                                    <textarea id="page-edit-body" rows="10" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white text-xs focus:outline-none focus:border-indigo-500 font-mono"></textarea>
+                                </div>
+
+                                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-indigo-600/30">
+                                    Cập Nhật Nội Dung Trang
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: SERVICES MANAGEMENT -->
+                    <div id="admin-content-services-tab" class="admin-tab-content hidden space-y-6">
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                            <h3 class="text-base font-bold text-white mb-4">Chỉnh Sửa Dịch Vụ Mẫu Trang Chủ</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                ${state.services.map(s => `
+                                    <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700 space-y-3">
+                                        <div class="h-28 rounded-lg overflow-hidden relative">
+                                            <img src="${s.image}" class="w-full h-full object-cover">
+                                        </div>
+                                        <h4 class="font-bold text-sm text-white">${s.name}</h4>
+                                        <p class="text-xs text-slate-400 leading-relaxed">${s.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Load default page data into tab 2
+            loadPageContentToEdit();
+        }
+
+        // TAB SWITCHER
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-400');
+            });
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            document.getElementById(`tab-btn-${tabId}`).classList.add('bg-indigo-600', 'text-white');
+            document.getElementById(`tab-btn-${tabId}`).classList.remove('bg-slate-800', 'text-slate-400');
+            document.getElementById(`admin-content-${tabId}`).classList.remove('hidden');
+        }
+
+        // HELPER: IMAGE UPLOAD TO BASE64
+        function handleImageUpload(event, targetInputId) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(targetInputId).value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // MENU CRUD OPERATIONS
+        function saveMenuItem(event) {
+            event.preventDefault();
+            const state = getState();
+            const editId = document.getElementById('menu-edit-id').value;
+            const title = document.getElementById('menu-title').value.trim();
+            const parentId = document.getElementById('menu-parent-id').value || null;
+            const externalUrl = document.getElementById('menu-external-url').value.trim();
+
+            if (editId) {
+                // Edit existing
+                const menuIndex = state.menus.findIndex(m => m.id === editId);
+                if (menuIndex !== -1) {
+                    state.menus[menuIndex].title = title;
+                    state.menus[menuIndex].parentId = parentId;
+                    state.menus[menuIndex].externalUrl = externalUrl;
+                    state.menus[menuIndex].isExternal = !!externalUrl;
+                }
+            } else {
+                // Add new menu item
+                const newId = 'm_' + Date.now();
+                state.menus.push({
+                    id: newId,
+                    title: title,
+                    parentId: parentId,
+                    externalUrl: externalUrl,
+                    isExternal: !!externalUrl,
+                    order: state.menus.length + 1
+                });
+            }
+
+            saveState(state);
+            alert('Lưu thay đổi Menu thành công!');
+        }
+
+        function editMenuItem(menuId) {
+            const state = getState();
+            const menu = state.menus.find(m => m.id === menuId);
+            if (!menu) return;
+
+            document.getElementById('menu-edit-id').value = menu.id;
+            document.getElementById('menu-title').value = menu.title;
+            document.getElementById('menu-parent-id').value = menu.parentId || '';
+            document.getElementById('menu-external-url').value = menu.externalUrl || '';
+        }
+
+        function deleteMenuItem(menuId) {
+            if (!confirm('Bạn có chắc muốn xóa mục menu này?')) return;
+            const state = getState();
+            state.menus = state.menus.filter(m => m.id !== menuId && m.parentId !== menuId);
+            saveState(state);
+        }
+
+        function resetMenuForm() {
+            document.getElementById('menu-edit-id').value = '';
+            document.getElementById('menu-title').value = '';
+            document.getElementById('menu-parent-id').value = '';
+            document.getElementById('menu-external-url').value = '';
+        }
+
+        // PAGE CONTENT EDITOR OPERATIONS
+        function loadPageContentToEdit() {
+            const state = getState();
+            const selectedMenuId = document.getElementById('page-select-id').value;
+            if (!selectedMenuId) return;
+
+            const pageData = state.pagesContent[selectedMenuId] || {
+                title: '',
+                subtitle: '',
+                bannerImg: '',
+                content: ''
+            };
+
+            document.getElementById('page-edit-title').value = pageData.title;
+                document.getElementById('page-edit-subtitle').value = pageData.subtitle;
+            document.getElementById('page-edit-banner').value = pageData.bannerImg;
+            document.getElementById('page-edit-body').value = pageData.content;
+        }
+
+        function savePageContent(event) {
+            event.preventDefault();
+            const state = getState();
+            const selectedMenuId = document.getElementById('page-select-id').value;
+
+            state.pagesContent[selectedMenuId] = {
+                title: document.getElementById('page-edit-title').value,
+                subtitle: document.getElementById('page-edit-subtitle').value,
+                bannerImg: document.getElementById('page-edit-banner').value,
+                content: document.getElementById('page-edit-body').value
+            };
+
+            saveState(state);
+            alert('Cập nhật nội dung trang động thành công!');
+        }
+
+        // ADMIN AUTHENTICATION
+        function toggleAdminView() {
+            const state = getState();
+            if (!state.isAdminLoggedIn) {
+                openModal('login-modal');
+            } else {
+                state.activePage = 'admin';
+                saveState(state);
+            }
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+
+            if (email === 'admin@xtime.vn' && pass === 'admin123') {
+                const state = getState();
+                state.isAdminLoggedIn = true;
+                state.activePage = 'admin';
+                closeModal('login-modal');
+                saveState(state);
+            } else {
+                alert('Tài khoản hoặc mật khẩu không chính xác!');
+            }
+        }
+
+        function handleAdminLogout() {
+            const state = getState();
+            state.isAdminLoggedIn = false;
+            state.activePage = 'home';
+            saveState(state);
+        }
+
+        // MODAL UTILS
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function handleQuoteSubmit(event) {
+            event.preventDefault();
+            alert('Cảm ơn bạn đã gửi thông tin! Đội ngũ tư vấn XTime sẽ liên hệ lại trong thời gian sớm nhất.');
+            closeModal('quote-modal');
+        }
+    </script>
+</body>
+</html>

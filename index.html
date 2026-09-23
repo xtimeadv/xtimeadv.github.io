@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Công ty Quảng cáo & Admin CMS</title>
+    <title>Giao Diện Công Ty Quảng Cáo & Admin CMS</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
                             100: '#dbeafe',
                             200: '#bfdbfe',
                             500: '#3b82f6',
-                            600: '#2563eb', // Vibrant primary blue
+                            600: '#2563eb', // Primary vibrant blue
                             700: '#1d4ed8',
                             800: '#1e40af', // Deep navy blue
                             900: '#1e3a8a',
@@ -61,7 +61,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen custom-scrollbar antialiased">
 
-    <!-- Top System Mode Switcher Bar -->
+    <!-- Top System Mode Bar Switcher -->
     <div class="bg-slate-900 text-white text-xs py-2 px-4 flex justify-between items-center z-50 sticky top-0 border-b border-slate-800 shadow-md">
         <div class="flex items-center space-x-3">
             <span class="flex h-2.5 w-2.5 relative">
@@ -69,7 +69,7 @@
               <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
             </span>
             <span class="font-bold tracking-wide text-slate-200">Hệ Thống CMS NovaMedia</span>
-            <span class="hidden sm:inline-block bg-blue-950 text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono border border-blue-800">HTML Embedded Viewer Active</span>
+            <span class="hidden sm:inline-block bg-blue-950 text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono border border-blue-800">GitHub API Sync Ready</span>
         </div>
         <div class="flex items-center space-x-2">
             <button id="nav-btn-client" onclick="switchMode('client')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-700 text-white shadow-sm flex items-center gap-1.5">
@@ -87,10 +87,10 @@
     <!-- Toast Notifications Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Generic App Modal -->
+    <!-- Global App Modal -->
     <div id="app-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div id="app-modal-card" class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all p-6 relative custom-scrollbar">
-            <!-- Modal Content Loaded Dynamically -->
+            <!-- Modal Content via JS -->
         </div>
     </div>
 
@@ -109,11 +109,9 @@
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- 0. EMBEDDED HTML PAGE VIEWER (Single Page - No New Tab Navigation) -->
-    <!-- ========================================================================= -->
+    <!-- 0. EMBEDDED HTML PAGE VIEWER (Single Page Sandbox Container) -->
     <div id="page-viewer-view" class="hidden flex-grow flex flex-col bg-white">
-        <!-- Viewer Header Control Bar -->
+        <!-- Viewer Top Control Header Bar -->
         <div class="bg-slate-900 text-white px-4 py-3 border-b border-slate-800 flex items-center justify-between shadow-md">
             <div class="flex items-center gap-3">
                 <button onclick="closePageViewer()" class="px-3.5 py-1.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-bold text-xs shadow-sm flex items-center gap-2 transition-all hover:-translate-x-0.5">
@@ -126,47 +124,41 @@
                 </div>
             </div>
             <div class="flex items-center gap-2 text-xs">
-                <span class="hidden md:inline-block bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-mono text-[11px]">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Embedded Sandbox Viewer
-                </span>
-                <button onclick="closePageViewer()" class="p-1.5 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+                <span class="hidden md:inline-block bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-mono text-[11px]"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Embedded Sandbox Viewer</span>
+                <button onclick="closePageViewer()" class="p-1.5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
         </div>
-        <!-- Iframe Container for Attached HTML File Content -->
+        <!-- Iframe Sandbox Container -->
         <div class="flex-grow w-full relative bg-slate-100 min-h-[calc(100vh-95px)]">
             <iframe id="embedded-html-frame" class="w-full h-full min-h-[calc(100vh-95px)] border-0" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
         </div>
     </div>
 
-    <!-- ========================================================================= -->
     <!-- 1. CLIENT FRONT-END VIEW -->
-    <!-- ========================================================================= -->
     <div id="client-view" class="flex-grow flex flex-col">
         
-        <!-- Navigation Header -->
+        <!-- Header / Navigation -->
         <header class="sticky top-[37px] z-40 glass-header border-b border-slate-200/80 shadow-sm transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
-                    <!-- Dynamic Logo & Brand Name -->
+                    <!-- Dynamic Logo & Company Name -->
                     <a href="#" class="flex items-center gap-3 group" id="client-logo-container">
                         <!-- Rendered dynamically -->
                     </a>
 
-                    <!-- Dynamic Menu Navigation -->
+                    <!-- Dynamic Header Menu -->
                     <nav class="hidden md:flex items-center space-x-1" id="client-nav-menu">
                         <!-- Rendered dynamically -->
                     </nav>
 
-                    <!-- Header CTA Button -->
+                    <!-- Contact CTA Button -->
                     <div class="hidden lg:flex items-center gap-3">
                         <a href="#contact" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 hover:from-brand-800 hover:to-brand-600 text-white font-bold text-sm shadow-md shadow-brand-700/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                             <i class="fa-solid fa-headset"></i> <span id="client-header-cta">Nhận Báo Giá</span>
                         </a>
                     </div>
 
-                    <!-- Mobile Menu Trigger Button -->
+                    <!-- Mobile Menu Trigger -->
                     <div class="md:hidden">
                         <button onclick="toggleMobileMenu()" class="p-2 rounded-xl text-slate-600 hover:text-brand-700 hover:bg-slate-100 focus:outline-none">
                             <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
@@ -175,7 +167,7 @@
                 </div>
             </div>
 
-            <!-- Mobile Navigation Menu -->
+            <!-- Mobile Nav Menu -->
             <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-6 space-y-2 shadow-xl">
                 <!-- Rendered dynamically -->
             </div>
@@ -210,7 +202,7 @@
                             </a>
                         </div>
                         
-                        <!-- Trust Metrics -->
+                        <!-- Trust Stats -->
                         <div class="pt-8 grid grid-cols-3 gap-4 border-t border-slate-800 mt-8">
                             <div>
                                 <p class="text-2xl sm:text-3xl font-black text-blue-400">500+</p>
@@ -227,7 +219,7 @@
                         </div>
                     </div>
 
-                    <!-- Hero Visual Image -->
+                    <!-- Hero Visual Media -->
                     <div class="lg:col-span-5 relative">
                         <div class="relative mx-auto max-w-md lg:max-w-none">
                             <div class="relative rounded-2xl p-2 bg-gradient-to-b from-blue-500/30 to-brand-800/20 border border-slate-700 shadow-2xl backdrop-blur-md">
@@ -258,7 +250,7 @@
                 </div>
 
                 <div id="client-services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Dynamic Services Grid -->
+                    <!-- Dynamic Services -->
                 </div>
             </div>
         </section>
@@ -275,7 +267,7 @@
                 </div>
 
                 <div id="client-portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Dynamic Portfolio Grid -->
+                    <!-- Dynamic Projects -->
                 </div>
             </div>
         </section>
@@ -289,7 +281,7 @@
                 </div>
 
                 <div id="client-testimonials-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Dynamic Testimonials Grid -->
+                    <!-- Dynamic Testimonials -->
                 </div>
             </div>
         </section>
@@ -303,17 +295,17 @@
                         <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">Bài Viết & Tin Tức Mới Nhất</h2>
                     </div>
                     <span class="text-xs text-slate-500 bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 mt-2 md:mt-0 shadow-sm flex items-center gap-2">
-                        <i class="fa-solid fa-sync text-brand-600 animate-spin"></i> Cập nhật trực tiếp từ Admin CMS
+                        <i class="fa-solid fa-sync text-brand-600 animate-spin"></i> Đồng bộ tự động từ Admin CMS
                     </span>
                 </div>
 
                 <div id="client-posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Dynamic Posts Grid -->
+                    <!-- Dynamic Posts -->
                 </div>
             </div>
         </section>
 
-        <!-- Contact Form Section -->
+        <!-- Contact CTA Section -->
         <section id="contact" class="py-20 bg-gradient-to-r from-brand-800 via-brand-900 to-slate-950 text-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -355,7 +347,7 @@
                         </div>
                     </div>
 
-                    <!-- Form Card -->
+                    <!-- Contact Form -->
                     <div class="bg-white rounded-2xl p-8 text-slate-800 shadow-2xl">
                         <h3 class="text-xl font-black text-slate-900 mb-6">Đăng Ký Tư Vấn Ngay</h3>
                         <form onsubmit="handleContactSubmit(event)" class="space-y-4">
@@ -432,13 +424,11 @@
         </footer>
     </div>
 
-    <!-- ========================================================================= -->
     <!-- 2. ADMIN DASHBOARD CMS SECTION -->
-    <!-- ========================================================================= -->
     <div id="admin-view" class="hidden flex-grow flex flex-col bg-slate-100">
         <div class="flex-grow flex flex-col md:flex-row min-h-[calc(100vh-37px)]">
             
-            <!-- Sidebar Navigation -->
+            <!-- Admin Sidebar Menu -->
             <aside class="w-full md:w-64 bg-slate-900 text-slate-300 p-5 flex flex-col shrink-0 border-r border-slate-800">
                 <div class="flex items-center gap-3 pb-5 mb-5 border-b border-slate-800">
                     <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shadow-lg">
@@ -446,11 +436,11 @@
                     </div>
                     <div class="overflow-hidden">
                         <h2 class="font-bold text-white text-sm tracking-tight truncate">CMS QUẢN TRỊ</h2>
-                        <p class="text-[10px] text-amber-400 font-mono">HTML File Attach Allowed</p>
+                        <p class="text-[10px] text-amber-400 font-mono">GitHub Sync Integrated</p>
                     </div>
                 </div>
 
-                <!-- Admin Tabs Menu -->
+                <!-- Navigation Tabs -->
                 <nav class="space-y-1 flex-1 text-xs">
                     <button onclick="switchAdminTab('global')" id="atab-global" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all bg-brand-700 text-white shadow-sm">
                         <i class="fa-solid fa-sliders w-4 text-center"></i> <span>1. Cấu Hình Chung</span>
@@ -473,19 +463,25 @@
                     <button onclick="switchAdminTab('testimonials')" id="atab-testimonials" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all text-slate-400 hover:bg-slate-800 hover:text-white">
                         <i class="fa-solid fa-comments w-4 text-center"></i> <span>7. Khách Hàng Đánh Giá</span>
                     </button>
-                    <button onclick="switchAdminTab('backup')" id="atab-backup" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all text-amber-400 hover:bg-slate-800 hover:text-amber-300">
-                        <i class="fa-solid fa-floppy-disk w-4 text-center"></i> <span>8. Cấu Hình & Sao Lưu</span>
+                    <button onclick="switchAdminTab('github')" id="atab-github" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all text-amber-400 hover:bg-slate-800 hover:text-amber-300">
+                        <i class="fa-brands fa-github w-4 text-center text-sm"></i> <span>8. Cấu Hình GitHub API</span>
                     </button>
                 </nav>
 
                 <div class="pt-4 border-t border-slate-800 space-y-2 mt-4">
+                    <button onclick="syncDataToGitHub()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-xs text-white font-bold hover:from-emerald-700 hover:to-teal-700 shadow-md transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Đồng Bộ Ngay Lên GitHub
+                    </button>
                     <button onclick="openChangePassModal()" class="w-full py-2 px-3 rounded-xl bg-slate-800 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors flex items-center justify-center gap-2">
                         <i class="fa-solid fa-key text-amber-400"></i> Đổi Mật Khẩu Admin
+                    </button>
+                    <button onclick="confirmResetData()" class="w-full py-2 px-3 rounded-xl border border-slate-800 text-xs text-rose-400 hover:bg-rose-950/30 transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i> Khôi phục dữ liệu mẫu
                     </button>
                 </div>
             </aside>
 
-            <!-- Main Admin Content Body -->
+            <!-- Main Content Area -->
             <main class="flex-1 p-4 sm:p-8 overflow-y-auto">
                 
                 <!-- TAB 1: GLOBAL CONFIG -->
@@ -703,60 +699,60 @@
                     </div>
                 </div>
 
-                <!-- TAB 8: BACKUP & DOMAIN EXPORT (CRITICAL FOR PERSISTENCE ON HOSTING) -->
-                <div id="admin-sec-backup" class="hidden space-y-6">
-                    <!-- Export Updated File Section -->
-                    <div class="bg-gradient-to-r from-blue-900 via-brand-800 to-slate-900 text-white p-6 sm:p-8 rounded-2xl shadow-lg border border-blue-700 space-y-4">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0">
-                                <i class="fa-solid fa-file-export"></i>
+                <!-- TAB 8: GITHUB API SYNC CONFIG -->
+                <div id="admin-sec-github" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center text-xl">
+                                <i class="fa-brands fa-github"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-black text-white">Xuất File `index.html` Đã Cập Nhật Để Đăng Domain</h3>
-                                <p class="text-xs text-blue-200 mt-1 leading-relaxed">
-                                    Để lưu vĩnh viễn dữ liệu (Logo, Submenu, Bài viết, File .HTML) trên hosting/domain mà không bị mất khi reset trang, bạn hãy nhấn nút bên dưới để tải về file <code class="bg-blue-950 px-1.5 py-0.5 rounded font-mono text-amber-300">index.html</code> đã nhúng toàn bộ dữ liệu hiện tại, sau đó upload đè lên hosting của bạn!
-                                </p>
+                                <h2 class="text-xl font-black text-slate-900">Cấu Hình Tự Động Đồng Bộ GitHub API</h2>
+                                <p class="text-xs text-slate-500">Tự động đẩy file <code class="font-mono text-amber-600 bg-amber-50 px-1 rounded">data.json</code> lên GitHub Repository để lưu trữ vĩnh viễn.</p>
                             </div>
                         </div>
-                        <div class="pt-3 flex flex-col sm:flex-row gap-3">
-                            <button onclick="downloadUpdatedIndexHtml()" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-lg transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-download text-base"></i> Tải File index.html Mới
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- JSON Backup & Restore -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                        <div>
-                            <h3 class="text-lg font-black text-slate-900">Sao Lưu & Khôi Phục Dữ Liệu Dạng File JSON</h3>
-                            <p class="text-xs text-slate-500 mt-1">Xuất hoặc nhập file cấu hình backup nhanh để lưu trữ dự phòng.</p>
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-2 my-4">
+                            <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Hướng dẫn kết nối vĩnh viễn với xtimeadv.github.io:</p>
+                            <ol class="list-decimal pl-5 space-y-1">
+                                <li><strong>Username:</strong> Điền <code class="font-mono bg-white px-1">xtimeadv</code></li>
+                                <li><strong>Repository:</strong> Điền <code class="font-mono bg-white px-1">xtimeadv.github.io</code></li>
+                                <li><strong>Branch:</strong> Điền <code class="font-mono bg-white px-1">main</code> hoặc <code class="font-mono bg-white px-1">master</code></li>
+                                <li><strong>GitHub Personal Access Token (PAT):</strong> Tạo token tại <em>GitHub -> Settings -> Developer settings -> Personal access tokens (classic)</em> tích chọn quyền <code class="font-mono bg-white px-1">repo</code>.</li>
+                            </ol>
                         </div>
+                        
+                        <form onsubmit="saveGitHubConfig(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">GitHub Username *</label>
+                                    <input type="text" id="gh-username" required placeholder="xtimeadv" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Tên Repository *</label>
+                                    <input type="text" id="gh-repo" required placeholder="xtimeadv.github.io" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nhánh (Branch) *</label>
+                                    <input type="text" id="gh-branch" required placeholder="main" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                                </div>
+                            </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                                <h4 class="font-bold text-xs text-slate-800"><i class="fa-solid fa-file-arrow-down text-brand-600 mr-1"></i> Export Data Backup</h4>
-                                <p class="text-[11px] text-slate-500">Tải file backup JSON chứa toàn bộ dữ liệu hệ thống.</p>
-                                <button onclick="exportJsonBackup()" class="px-4 py-2 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-bold text-xs shadow-sm">
-                                    Xuất File Backup (.json)
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">GitHub Personal Access Token (PAT) *</label>
+                                <input type="password" id="gh-token" required placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono focus:ring-2 focus:ring-brand-500">
+                                <p class="text-[11px] text-slate-400 mt-1">Mã token này sẽ được lưu an toàn trên trình duyệt của bạn để tự động đẩy dữ liệu lên GitHub.</p>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-3 pt-2">
+                                <button type="submit" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> Lưu Cấu Hình GitHub
+                                </button>
+                                <button type="button" onclick="syncDataToGitHub()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Đồng Bộ Dữ Liệu Ngay Lên GitHub
                                 </button>
                             </div>
-
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                                <h4 class="font-bold text-xs text-slate-800"><i class="fa-solid fa-file-arrow-up text-amber-600 mr-1"></i> Import Data Backup</h4>
-                                <p class="text-[11px] text-slate-500">Tải file backup JSON có sẵn để đè lại dữ liệu hệ thống.</p>
-                                <label class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-sm inline-block cursor-pointer">
-                                    Nhập File Backup (.json)
-                                    <input type="file" accept=".json" class="hidden" onchange="importJsonBackup(this)">
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
-                            <span class="text-xs text-slate-400">Khôi phục về cài đặt mẫu ban đầu:</span>
-                            <button onclick="confirmResetData()" class="px-4 py-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold">
-                                Reset Về Dữ Liệu Mẫu Mặc Định
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
 
@@ -765,7 +761,7 @@
     </div>
 
     <script>
-        // Sample HTML page attached demo
+        // Default Sample HTML Page Content for Demonstration
         const DEMO_HTML_PAGE_CONTENT = `<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -782,7 +778,7 @@
             </div>
             <div>
                 <h1 class="text-2xl font-black text-slate-900">Tính Bán Kính Quảng Cáo Địa Phương (Radius Tool)</h1>
-                <p class="text-xs text-slate-500">File HTML tích hợp trực tiếp - Tự động tải không cần mở tab mới.</p>
+                <p class="text-xs text-slate-500">File HTML tích hợp trực tiếp vào Menu - Tự động tải không cần tab mới.</p>
             </div>
         </div>
 
@@ -793,7 +789,7 @@
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Bán kính khoanh vùng (km)</label>
-                <input type="number" value="5" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                <input type="number" id="rad-val" value="5" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
             </div>
         </div>
 
@@ -813,11 +809,16 @@
 </body>
 </html>`;
 
-        // DEFAULT DATA STRUCTURE
         const DEFAULT_DB = {
             auth: {
                 isLogged: false,
                 passHash: "admin123"
+            },
+            githubConfig: {
+                username: "xtimeadv",
+                repo: "xtimeadv.github.io",
+                branch: "main",
+                token: ""
             },
             siteConfig: {
                 companyName: "NOVA MEDIA",
@@ -851,7 +852,7 @@
                         { id: "sm2", title: "Xây Dựng Thương Hiệu", url: "#services", linkType: "url" },
                         { 
                             id: "sm3", 
-                            title: "Tìm bán kính", 
+                            title: "Tìm Bán Kính (Demo File .HTML)", 
                             url: "tim-ban-kinh.html", 
                             linkType: "html",
                             htmlContent: DEMO_HTML_PAGE_CONTENT,
@@ -952,99 +953,124 @@
 
         let db = {};
 
-        function loadDB() {
-            const stored = localStorage.getItem('adagency_cms_db_v3');
-            if (stored) {
-                try {
-                    db = JSON.parse(stored);
-                } catch(e) {
+        // Fetch data.json from GitHub Pages repository if available
+        async function fetchGitHubData() {
+            try {
+                const response = await fetch('./data.json?t=' + Date.now());
+                if (response.ok) {
+                    const remoteData = await response.json();
+                    if (remoteData && remoteData.siteConfig) {
+                        db = remoteData;
+                        localStorage.setItem('adagency_cms_db_v3', JSON.stringify(db));
+                        showToast("Đã nạp dữ liệu mới nhất từ GitHub Pages!", "success");
+                        return true;
+                    }
+                }
+            } catch (err) {
+                console.log("No data.json found on GitHub Pages yet, using LocalStorage.");
+            }
+            return false;
+        }
+
+        async function loadDB() {
+            const hasRemote = await fetchGitHubData();
+            if (!hasRemote) {
+                const stored = localStorage.getItem('adagency_cms_db_v3');
+                if (stored) {
+                    try {
+                        db = JSON.parse(stored);
+                    } catch(e) {
+                        db = JSON.parse(JSON.stringify(DEFAULT_DB));
+                    }
+                } else {
                     db = JSON.parse(JSON.stringify(DEFAULT_DB));
                 }
-            } else {
-                db = JSON.parse(JSON.stringify(DEFAULT_DB));
             }
             saveDB();
         }
 
         function saveDB() {
-            try {
-                localStorage.setItem('adagency_cms_db_v3', JSON.stringify(db));
-            } catch(err) {
-                showToast("Bộ nhớ LocalStorage bị đầy! Hãy nén kích thước hình ảnh trước khi lưu.", "warning");
-            }
+            localStorage.setItem('adagency_cms_db_v3', JSON.stringify(db));
             renderClientApp();
             renderAdminApp();
         }
 
-        function downloadUpdatedIndexHtml() {
+        // =========================================================================
+        // GITHUB API AUTO-SYNC ENGINE
+        // =========================================================================
+        async function syncDataToGitHub() {
+            const gh = db.githubConfig || {};
+            if (!gh.username || !gh.repo || !gh.token) {
+                showToast("Vui lòng nhập đầy đủ thông tin cấu hình GitHub API ở Mục 8!", "warning");
+                switchAdminTab('github');
+                return;
+            }
+
+            showToast("Đang kết nối API và đồng bộ dữ liệu lên GitHub...", "info");
+
+            const filePath = "data.json";
+            const apiUrl = `https://api.github.com/repos/${gh.username}/${gh.repo}/contents/${filePath}`;
+            const jsonString = JSON.stringify(db, null, 2);
+            
+            // Encode UTF-8 JSON String to Base64
+            const contentBase64 = btoa(unescape(encodeURIComponent(jsonString)));
+
             try {
-                let currentOuterHtml = document.documentElement.outerHTML;
-
-                // Create a clean copy of DB with login status set to false for security
-                const cleanDb = JSON.parse(JSON.stringify(db));
-                cleanDb.auth.isLogged = false;
-
-                const dbRegex = /const DEFAULT_DB = \{[\s\S]*?\};/;
-                const newDbDeclaration = `const DEFAULT_DB = ${JSON.stringify(cleanDb, null, 2)};`;
-
-                if (dbRegex.test(currentOuterHtml)) {
-                    currentOuterHtml = currentOuterHtml.replace(dbRegex, newDbDeclaration);
-                    const fullDocumentHtml = `<!DOCTYPE html>\n<html lang="vi" class="scroll-smooth">\n` + currentOuterHtml + `\n</html>`;
-
-                    const blob = new Blob([fullDocumentHtml], { type: 'text/html;charset=utf-8' });
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = URL.createObjectURL(blob);
-                    downloadLink.download = 'index.html';
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-
-                    showToast("Đã tải xuống file index.html mới chứa đầy đủ dữ liệu đã sửa!", "success");
-                } else {
-                    showToast("Không tìm thấy vị trí chèn dữ liệu mặc định trong file mã nguồn!", "warning");
-                }
-            } catch (error) {
-                showToast("Lỗi khi kết xuất file HTML: " + error.message, "warning");
-            }
-        }
-
-        function exportJsonBackup() {
-            const cleanDb = JSON.parse(JSON.stringify(db));
-            cleanDb.auth.isLogged = false;
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanDb, null, 2));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "novamedia_backup_" + new Date().toISOString().split('T')[0] + ".json");
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-            showToast("Đã xuất file JSON sao lưu thành công!", "success");
-        }
-
-        function importJsonBackup(fileInput) {
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importedDb = JSON.parse(e.target.result);
-                        if (importedDb && importedDb.siteConfig && importedDb.menus) {
-                            db = importedDb;
-                            saveDB();
-                            showToast("Đã nhập dữ liệu từ file sao lưu thành công!", "success");
-                        } else {
-                            showToast("Cấu trúc file JSON không hợp lệ!", "warning");
-                        }
-                    } catch(err) {
-                        showToast("File không đúng định dạng JSON!", "warning");
+                // 1. Get current file SHA if exists
+                let sha = "";
+                const getRes = await fetch(apiUrl, {
+                    headers: {
+                        "Authorization": `token ${gh.token}`,
+                        "Accept": "application/vnd.github.v3+json"
                     }
-                };
-                reader.readAsText(file);
+                });
+
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                // 2. Put / Commit file to GitHub
+                const putRes = await fetch(apiUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `token ${gh.token}`,
+                        "Accept": "application/vnd.github.v3+json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: "CMS Data Auto Sync via Admin Panel [" + new Date().toLocaleString() + "]",
+                        content: contentBase64,
+                        branch: gh.branch || "main",
+                        sha: sha || undefined
+                    })
+                });
+
+                if (putRes.ok) {
+                    showToast("Đã đồng bộ vĩnh viễn dữ liệu thành công lên GitHub Repository!", "success");
+                } else {
+                    const errData = await putRes.json();
+                    showToast("Lỗi đồng bộ GitHub: " + (errData.message || "Kiểm tra lại Personal Access Token"), "warning");
+                }
+            } catch (err) {
+                showToast("Lỗi kết nối mạng khi gửi GitHub API!", "warning");
             }
+        }
+
+        function saveGitHubConfig(e) {
+            e.preventDefault();
+            db.githubConfig = {
+                username: document.getElementById('gh-username').value.trim(),
+                repo: document.getElementById('gh-repo').value.trim(),
+                branch: document.getElementById('gh-branch').value.trim() || 'main',
+                token: document.getElementById('gh-token').value.trim()
+            };
+            saveDB();
+            showToast("Đã lưu Cấu Hình GitHub API!", "success");
         }
 
         function confirmResetData() {
-            showConfirmDialog("Khôi phục mặc định", "Toàn bộ dữ liệu chỉnh sửa sẽ trở về cài đặt gốc ban đầu. Bạn chắc chắn chứ?", () => {
+            showConfirmDialog("Khôi phục mặc định", "Toàn bộ bài viết, menu, tệp .html & cấu hình sẽ trở về cài đặt gốc ban đầu. Bạn chắc chắn chứ?", () => {
                 db = JSON.parse(JSON.stringify(DEFAULT_DB));
                 saveDB();
                 showToast("Đã khôi phục dữ liệu gốc thành công!", "success");
@@ -1055,7 +1081,7 @@
             const file = fileInput.files[0];
             if (file) {
                 if (file.size > 2 * 1024 * 1024) {
-                    showToast("Dung lượng ảnh quá lớn! Vui lòng chọn tệp nhỏ hơn 2MB.", "warning");
+                    showToast("Dung lượng ảnh vượt quá 2MB, vui lòng chọn tệp nhỏ hơn!", "warning");
                     return;
                 }
                 const reader = new FileReader();
@@ -1072,7 +1098,9 @@
             }
         }
 
-        // Single Page HTML Embedded Viewer Handler
+        // =========================================================================
+        // SINGLE PAGE HTML EMBEDDED VIEWER LOGIC (NO NEW TAB)
+        // =========================================================================
         function handleMenuClick(e, menuId, parentId = null) {
             let item = null;
             if (parentId) {
@@ -1090,24 +1118,27 @@
             const isHtmlType = item.linkType === 'html';
             const isHtmlFileExt = url.toLowerCase().endsWith('.html') || url.toLowerCase().endsWith('.htm');
 
-            // Open inside Embedded Sandbox Viewer without opening new tab
+            // If item has attached HTML content OR points to an HTML page, open inside Embedded Sandbox Viewer!
             if (isHtmlType || isHtmlFileExt || item.htmlContent) {
                 if (e) e.preventDefault();
 
+                // Hide Client and Admin views, show Page Viewer
                 document.getElementById('client-view').classList.add('hidden');
                 document.getElementById('admin-view').classList.add('hidden');
                 const viewer = document.getElementById('page-viewer-view');
                 viewer.classList.remove('hidden');
 
-                // Display CLEAN title only (No .html extension in brackets)
+                // CLEAN TITLE: Clean title without any badge or extension text in header
                 document.getElementById('page-viewer-title').textContent = item.title;
 
                 const frame = document.getElementById('embedded-html-frame');
                 
                 if (item.htmlContent && item.htmlContent.trim().length > 0) {
+                    // Inject raw HTML directly into iframe srcdoc
                     frame.src = 'about:blank';
                     frame.srcdoc = item.htmlContent;
                 } else if (url && (url.endsWith('.html') || url.endsWith('.htm'))) {
+                    // Load relative or remote .html file into iframe
                     frame.removeAttribute('srcdoc');
                     frame.src = url;
                 } else {
@@ -1115,12 +1146,14 @@
                     frame.srcdoc = `<div style="font-family: sans-serif; padding: 40px; text-align: center;"><h2>Trang HTML Rỗng</h2><p>Chưa có nội dung file HTML nào được đính kèm cho menu này.</p></div>`;
                 }
 
+                // Close mobile menu if open
                 document.getElementById('mobile-menu').classList.add('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                showToast(`Đang mở: "${item.title}"`, "info");
+                showToast(`Đang hiển thị file HTML: "${item.title}"`, "info");
                 return false;
             }
 
+            // Normal anchor navigation
             if (url.startsWith('#')) {
                 document.getElementById('mobile-menu').classList.add('hidden');
                 return true;
@@ -1134,7 +1167,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Authentication Handlers
+        // =========================================================================
+        // AUTHENTICATION & ACCESS CONTROL
+        // =========================================================================
         function switchMode(mode) {
             closePageViewer();
             if (mode === 'admin') {
@@ -1164,7 +1199,7 @@
                         <i class="fa-solid fa-lock"></i>
                     </div>
                     <h3 class="text-xl font-black text-slate-900">Đăng Nhập Trang Quản Trị</h3>
-                    <p class="text-xs text-slate-500 mt-1">Mật khẩu mặc định: <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-amber-600 font-bold">admin123</code></p>
+                    <p class="text-xs text-slate-500 mt-1">Nhập mật khẩu quản trị để chỉnh sửa nội dung website (Mật khẩu mặc định: <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-amber-600">admin123</code>)</p>
                     
                     <form onsubmit="handleLoginSubmit(event)" class="mt-6 space-y-4 text-left">
                         <div>
@@ -1246,8 +1281,11 @@
             showToast("Đã đổi mật khẩu Admin thành công!", "success");
         }
 
+        // =========================================================================
+        // CLIENT FRONT-END RENDERERS
+        // =========================================================================
         function renderClientApp() {
-            // Logo
+            // 1. Header & Logo
             const logoCont = document.getElementById('client-logo-container');
             const footerLogoCont = document.getElementById('footer-logo-container');
             const logoSrc = db.siteConfig.logo;
@@ -1267,7 +1305,7 @@
             logoCont.innerHTML = logoHtml;
             footerLogoCont.innerHTML = logoHtml;
 
-            // CLEAN Submenu Rendering (NO badge tag)
+            // 2. Dynamic Navigation Header Menu (Clean Submenu Text - No Badges)
             const navMenu = document.getElementById('client-nav-menu');
             const mobileMenu = document.getElementById('mobile-menu');
 
@@ -1298,7 +1336,7 @@
                             <a href="${m.url}" onclick="return handleMenuClick(event, '${m.id}')" class="font-bold text-slate-900 text-sm py-1 flex items-center gap-1">${m.title}</a>
                             <div class="pl-4 space-y-1 border-l-2 border-slate-100 ml-1">
                                 ${m.submenus.map(sub => `
-                                    <a href="${sub.url}" onclick="return handleMenuClick(event, '${sub.id}', '${m.id}')" class="block py-1.5 text-xs text-slate-600 hover:text-brand-600 flex items-center justify-between">
+                                    <a href="${sub.url}" onclick="return handleMenuClick(event, '${sub.id}', '${m.id}')" class="block py-1.5 text-xs text-slate-600 hover:text-brand-600">
                                         <span>${sub.title}</span>
                                     </a>
                                 `).join('')}
@@ -1313,7 +1351,7 @@
                     `;
 
                     mobHtml += `
-                        <a href="${m.url}" onclick="return handleMenuClick(event, '${m.id}')" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 border-b border-slate-50 flex items-center justify-between">
+                        <a href="${m.url}" onclick="return handleMenuClick(event, '${m.id}')" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 border-b border-slate-50">
                             <span>${m.title}</span>
                         </a>
                     `;
@@ -1323,13 +1361,13 @@
             navMenu.innerHTML = navHtml;
             mobileMenu.innerHTML = mobHtml;
 
-            // Hero
+            // 3. Hero Section
             document.getElementById('client-hero-title').textContent = db.hero.title;
             document.getElementById('client-hero-highlight').textContent = db.hero.highlight;
             document.getElementById('client-hero-subtitle').textContent = db.hero.subtitle;
             document.getElementById('client-hero-img').src = db.hero.image;
 
-            // Services Grid
+            // 4. Services Grid
             const srvGrid = document.getElementById('client-services-grid');
             srvGrid.innerHTML = db.services.map(s => `
                 <div class="p-8 rounded-2xl border border-slate-100 bg-white hover:shadow-xl hover:border-blue-100 transition-all duration-300 group flex flex-col justify-between">
@@ -1346,7 +1384,7 @@
                 </div>
             `).join('');
 
-            // Portfolio Grid
+            // 5. Portfolio Grid
             const portGrid = document.getElementById('client-portfolio-grid');
             portGrid.innerHTML = db.portfolio.map(p => `
                 <div class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-lg transition-all group">
@@ -1363,7 +1401,7 @@
                 </div>
             `).join('');
 
-            // Testimonials Grid
+            // 6. Testimonials Grid
             const testGrid = document.getElementById('client-testimonials-grid');
             testGrid.innerHTML = db.testimonials.map(t => `
                 <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/60 shadow-sm flex flex-col justify-between">
@@ -1378,7 +1416,7 @@
                 </div>
             `).join('');
 
-            // Posts Grid
+            // 7. Posts Grid
             const postsGrid = document.getElementById('client-posts-grid');
             postsGrid.innerHTML = db.posts.map(post => `
                 <article class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
@@ -1401,11 +1439,12 @@
                 </article>
             `).join('');
 
-            // Contact & Footer Info
+            // 8. Contact Info
             document.getElementById('client-contact-hotline').textContent = db.siteConfig.hotline;
             document.getElementById('client-contact-email').textContent = db.siteConfig.email;
             document.getElementById('client-contact-address').textContent = db.siteConfig.address;
 
+            // 9. Footer Info
             document.getElementById('footer-slogan').textContent = db.siteConfig.slogan;
             document.getElementById('footer-company-name').textContent = db.siteConfig.companyName;
             document.getElementById('footer-hotline').innerHTML = `<i class="fa-solid fa-phone mr-2 text-brand-500"></i> ${db.siteConfig.hotline}`;
@@ -1419,30 +1458,26 @@
             `;
         }
 
+        // =========================================================================
+        // ADMIN DASHBOARD RENDERERS & HTML FILE ATTACHMENT FORMS
+        // =========================================================================
         function switchAdminTab(tabKey) {
-            const tabs = ['global', 'menus', 'hero', 'services', 'portfolio', 'posts', 'testimonials', 'backup'];
+            const tabs = ['global', 'menus', 'hero', 'services', 'portfolio', 'posts', 'testimonials', 'github'];
             tabs.forEach(t => {
-                const sec = document.getElementById(`admin-sec-${t}`);
-                if (sec) sec.classList.add('hidden');
+                document.getElementById(`admin-sec-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`atab-${t}`);
                 if (btn) btn.className = "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all text-slate-400 hover:bg-slate-800 hover:text-white";
             });
 
-            const activeSec = document.getElementById(`admin-sec-${tabKey}`);
-            if (activeSec) activeSec.classList.remove('hidden');
-            
+            document.getElementById(`admin-sec-${tabKey}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`atab-${tabKey}`);
             if (activeBtn) {
-                if (tabKey === 'backup') {
-                    activeBtn.className = "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all bg-amber-500 text-slate-950 shadow-sm";
-                } else {
-                    activeBtn.className = "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all bg-brand-700 text-white shadow-sm";
-                }
+                activeBtn.className = tabKey === 'github' ? "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all bg-amber-500 text-slate-950 shadow-sm" : "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-bold transition-all bg-brand-700 text-white shadow-sm";
             }
         }
 
         function renderAdminApp() {
-            // Fill Forms
+            // Fill Global Config Form
             document.getElementById('cfg-company').value = db.siteConfig.companyName;
             document.getElementById('cfg-slogan').value = db.siteConfig.slogan;
             document.getElementById('cfg-logo').value = db.siteConfig.logo || '';
@@ -1455,15 +1490,25 @@
             document.getElementById('cfg-youtube').value = db.siteConfig.youtube;
             document.getElementById('cfg-tiktok').value = db.siteConfig.tiktok;
 
+            // Fill Hero Section Form
             document.getElementById('hero-title').value = db.hero.title;
             document.getElementById('hero-highlight').value = db.hero.highlight;
             document.getElementById('hero-subtitle').value = db.hero.subtitle;
             document.getElementById('hero-image').value = db.hero.image;
             document.getElementById('hero-image-prev').src = db.hero.image;
 
+            // Fill GitHub Config Form
+            if (db.githubConfig) {
+                document.getElementById('gh-username').value = db.githubConfig.username || 'xtimeadv';
+                document.getElementById('gh-repo').value = db.githubConfig.repo || 'xtimeadv.github.io';
+                document.getElementById('gh-branch').value = db.githubConfig.branch || 'main';
+                document.getElementById('gh-token').value = db.githubConfig.token || '';
+            }
+
+            // Render Admin Menus Tree
             renderAdminMenusTree();
 
-            // Services List
+            // Render Services
             const srvList = document.getElementById('admin-services-list');
             srvList.innerHTML = db.services.map(s => `
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-start">
@@ -1483,7 +1528,7 @@
                 </div>
             `).join('');
 
-            // Portfolio List
+            // Render Portfolio
             const portList = document.getElementById('admin-portfolio-list');
             portList.innerHTML = db.portfolio.map(p => `
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
@@ -1499,7 +1544,7 @@
                 </div>
             `).join('');
 
-            // Posts Table
+            // Render Posts
             const postsTbody = document.getElementById('admin-posts-tbody');
             postsTbody.innerHTML = db.posts.map(p => `
                 <tr class="hover:bg-slate-50 transition-colors">
@@ -1518,7 +1563,7 @@
                 </tr>
             `).join('');
 
-            // Testimonials List
+            // Render Testimonials
             const testList = document.getElementById('admin-testimonials-list');
             testList.innerHTML = db.testimonials.map(t => `
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-start">
@@ -1538,6 +1583,9 @@
             `).join('');
         }
 
+        // =========================================================================
+        // ADMIN MENU & HTML FILE MANAGEMENT MODALS
+        // =========================================================================
         function renderAdminMenusTree() {
             const container = document.getElementById('admin-menus-tree');
             container.innerHTML = db.menus.map((m, idx) => {
@@ -1615,13 +1663,16 @@
                             </div>
                         </div>
 
+                        <!-- URL Field -->
                         <div id="m-field-url" class="${menu.linkType === 'html' ? 'hidden' : ''}">
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Đường dẫn URL / File .html *</label>
-                            <input type="text" id="m-url" value="${menu.url || '#'}" placeholder="Ví dụ: #services, page.html" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Đường dẫn URL / File .html tương đối *</label>
+                            <input type="text" id="m-url" value="${menu.url || '#'}" placeholder="Ví dụ: #services, tim-ban-kinh.html, https://..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-info-circle mr-1"></i> Nếu nhập file dạng <code class="font-mono bg-slate-100 px-1">.html</code> hệ thống sẽ tự động hiển thị trong Sandbox Viewer không mở tab mới.</p>
                         </div>
 
+                        <!-- HTML File Upload Field -->
                         <div id="m-field-html" class="${menu.linkType !== 'html' ? 'hidden' : ''} p-4 rounded-xl bg-blue-50/60 border border-blue-200 space-y-3">
-                            <label class="block text-xs font-bold text-blue-900 mb-1">Tải tệp file .HTML từ máy tính</label>
+                            <label class="block text-xs font-bold text-blue-900 mb-1">Tải tệp file .HTML từ máy tính của bạn</label>
                             <div class="flex items-center gap-3">
                                 <label class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer transition-colors shadow-sm inline-flex items-center gap-1.5">
                                     <i class="fa-solid fa-upload"></i> Chọn Tệp .HTML
@@ -1631,6 +1682,7 @@
                                     ${tempUploadedHtmlFileName ? `✔ Đã chọn: ${tempUploadedHtmlFileName}` : 'Chưa chọn tệp nào'}
                                 </span>
                             </div>
+                            <p class="text-[11px] text-blue-800 leading-relaxed"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Nội dung file .HTML sẽ được đọc và lưu trực tiếp vào hệ thống. Khi khách nhấn vào menu này, trang web sẽ hiển thị trực tiếp nội dung file ngay trên giao diện mà không nhảy tab mới.</p>
                         </div>
 
                         <div class="flex justify-end gap-3 pt-3 border-t border-slate-100">
@@ -1658,7 +1710,7 @@
                     <form onsubmit="handleSubmenuSave(event, '${parentId}', '${subId || ''}')" class="space-y-4 pt-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Tên Submenu *</label>
-                            <input type="text" id="sub-title" required value="${sub.title}" placeholder="Ví dụ: Tìm bán kính..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
+                            <input type="text" id="sub-title" required value="${sub.title}" placeholder="Tìm bán kính, Đặt lịch..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
                         </div>
 
                         <div>
@@ -1675,11 +1727,13 @@
                             </div>
                         </div>
 
+                        <!-- URL Field -->
                         <div id="sub-field-url" class="${sub.linkType === 'html' ? 'hidden' : ''}">
                             <label class="block text-xs font-bold text-slate-700 mb-1">Đường dẫn URL / File .html *</label>
                             <input type="text" id="sub-url" value="${sub.url || '#'}" placeholder="Ví dụ: #services, page.html" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-brand-500">
                         </div>
 
+                        <!-- HTML File Upload Field -->
                         <div id="sub-field-html" class="${sub.linkType !== 'html' ? 'hidden' : ''} p-4 rounded-xl bg-blue-50/60 border border-blue-200 space-y-3">
                             <label class="block text-xs font-bold text-blue-900 mb-1">Tải tệp file .HTML từ máy tính</label>
                             <div class="flex items-center gap-3">
@@ -1717,7 +1771,7 @@
             const file = fileInput.files[0];
             if (file) {
                 if (!file.name.toLowerCase().endsWith('.html') && !file.name.toLowerCase().endsWith('.htm')) {
-                    showToast("Vui lòng chọn tệp có đuôi .html hoặc .htm!", "warning");
+                    showToast("Vui lòng chọn đúng tệp có định dạng .html hoặc .htm!", "warning");
                     return;
                 }
                 const reader = new FileReader();
@@ -1765,7 +1819,7 @@
             }
             saveDB();
             closeAppModal();
-            showToast("Đã lưu Menu chính!", "success");
+            showToast("Đã lưu cài đặt Menu!", "success");
         }
 
         function handleSubmenuSave(e, parentId, subId) {
@@ -1809,7 +1863,7 @@
         }
 
         function deleteMenu(menuId) {
-            showConfirmDialog("Xóa Menu", "Hành động này sẽ xóa luôn tất cả Submenu bên trong. Xác nhận?", () => {
+            showConfirmDialog("Xóa Menu", "Hành động này sẽ xóa luôn cả các Submenu bên trong. Xác nhận?", () => {
                 db.menus = db.menus.filter(m => m.id !== menuId);
                 saveDB();
                 showToast("Đã xóa menu!", "warning");
@@ -1825,6 +1879,7 @@
             }
         }
 
+        // OTHER CRUD HANDLERS
         function saveGlobalConfig(e) {
             e.preventDefault();
             db.siteConfig.companyName = document.getElementById('cfg-company').value;
@@ -1839,7 +1894,7 @@
             db.siteConfig.tiktok = document.getElementById('cfg-tiktok').value;
 
             saveDB();
-            showToast("Đã lưu Cấu Hình Chung!", "success");
+            showToast("Đã lưu Cấu Hình Chung thành công!", "success");
         }
 
         function saveHeroConfig(e) {
@@ -1850,10 +1905,10 @@
             db.hero.image = document.getElementById('hero-image').value;
 
             saveDB();
-            showToast("Đã lưu Banner Hero!", "success");
+            showToast("Đã cập nhật Banner Hero!", "success");
         }
 
-        // Services CRUD
+        // SERVICES CRUD
         function openServiceModal(srvId = null) {
             const isEdit = !!srvId;
             const srv = isEdit ? db.services.find(s => s.id === srvId) : { title: '', icon: 'fa-chart-pie', image: '', shortDesc: '', fullDesc: '' };
@@ -1930,7 +1985,7 @@
             });
         }
 
-        // Portfolio CRUD
+        // PORTFOLIO CRUD
         function openPortfolioModal(portId = null) {
             const isEdit = !!portId;
             const p = isEdit ? db.portfolio.find(item => item.id === portId) : { title: '', category: 'Digital Ads', image: '', description: '' };
@@ -2001,7 +2056,7 @@
             });
         }
 
-        // Posts CRUD
+        // POSTS CRUD
         function openPostModal(postId = null) {
             const isEdit = !!postId;
             const post = isEdit ? db.posts.find(p => p.id === postId) : { title: '', category: 'Xu Hướng', image: '', summary: '', content: '' };
@@ -2086,7 +2141,7 @@
             });
         }
 
-        // Testimonials CRUD
+        // TESTIMONIALS CRUD
         function openTestimonialModal(tId = null) {
             const isEdit = !!tId;
             const t = isEdit ? db.testimonials.find(item => item.id === tId) : { name: '', role: '', avatar: '', quote: '' };
@@ -2157,7 +2212,9 @@
             });
         }
 
-        // Reader Modals
+        // =========================================================================
+        // CLIENT MODAL READERS
+        // =========================================================================
         function openServiceDetailModal(srvId) {
             const srv = db.services.find(s => s.id === srvId);
             if (!srv) return;
@@ -2206,7 +2263,9 @@
             openAppModal(html);
         }
 
-        // Global Modal & Toast Utilities
+        // =========================================================================
+        // SYSTEM DIALOG & TOAST UTILITIES
+        // =========================================================================
         function openAppModal(contentHtml) {
             const card = document.getElementById('app-modal-card');
             card.innerHTML = contentHtml;
@@ -2274,11 +2333,12 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
+        // Close modal when clicking backdrop
         document.getElementById('app-modal').addEventListener('click', function(e) {
             if (e.target === this) closeAppModal();
         });
 
-        // Initialize App
+        // Initialize application on load
         window.onload = function() {
             loadDB();
         };

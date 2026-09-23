@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title-tag">NovaMedia - Công Ty Quảng Cáo & Truyền Thông Chuyên Nghiệp</title>
+    <title id="site-title-tag">XTIME Quảng Cáo - Công Ty Quảng Cáo & Truyền Thông Chuyên Nghiệp</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -14,11 +14,11 @@
                         brand: {
                             50: '#eff6ff',
                             100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                            900: '#0f172a',
                         }
                     }
                 }
@@ -49,7 +49,7 @@
     <!-- MODAL ĐĂNG NHẬP ADMIN -->
     <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 transform transition-all duration-300 scale-95 opacity-0" id="login-modal-card">
-            <div class="bg-gradient-to-r from-brand-900 to-brand-700 p-6 text-white relative">
+            <div class="bg-gradient-to-r from-slate-900 to-brand-800 p-6 text-white relative">
                 <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-white/80 hover:text-white text-xl transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -57,7 +57,7 @@
                     <i class="fa-solid fa-lock text-2xl text-amber-400"></i>
                 </div>
                 <h3 class="text-xl font-bold">Xác Thực Quản Trị Viên</h3>
-                <p class="text-xs text-brand-100 mt-1">Vui lòng nhập mật khẩu để truy cập trang quản trị CMS</p>
+                <p class="text-xs text-slate-300 mt-1">Vui lòng nhập mật khẩu để truy cập trang quản trị CMS</p>
             </div>
             <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
                 <div>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2.5 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">Hủy bỏ</button>
-                    <button type="submit" class="w-1/2 py-2.5 bg-brand-700 hover:bg-brand-800 text-white rounded-lg text-sm font-medium shadow-lg shadow-brand-700/30 transition-all">Đăng nhập</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium shadow-lg transition-all">Đăng nhập</button>
                 </div>
             </form>
         </div>
@@ -86,34 +86,32 @@
     <!-- MAIN HEADER BAR -->
     <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-14 text-sm">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-2.5 w-2.5 relative">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-600"></span>
-                    </span>
-                    <span class="font-bold tracking-wide text-slate-100" id="header-company-name">NovaMedia CMS</span>
-                    <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] bg-brand-900/80 text-brand-200 border border-brand-700/50 rounded-full">GitHub API Sync Ready</span>
+            <div class="flex items-center justify-between h-12 text-sm">
+                <!-- CLIENT MODE TOP BAR (ĐÃ BỎ TÊN & NÚT TRANG KHÁCH HÀNG DƯ THỪA) -->
+                <div id="mode-buttons-client" class="w-full flex items-center justify-end">
+                    <button onclick="requestAdminAccess()" id="btn-view-admin" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center gap-1.5 transition-all border border-slate-700">
+                        <i class="fa-solid fa-user-shield text-amber-400"></i>
+                        <span>Quản Trị (Admin CMS)</span>
+                    </button>
                 </div>
-                
-                <div class="flex items-center gap-2">
-                    <div id="mode-buttons-client" class="flex items-center gap-2">
-                        <button onclick="switchToClient()" id="btn-view-client" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-brand-600 text-white shadow-sm flex items-center gap-1.5 transition-all">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>Trang Khách Hàng</span>
-                        </button>
-                        <button onclick="requestAdminAccess()" id="btn-view-admin" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center gap-1.5 transition-all border border-slate-700">
-                            <i class="fa-solid fa-user-shield text-amber-400"></i>
-                            <span>Quản Trị (Admin CMS)</span>
-                        </button>
+
+                <!-- ADMIN MODE TOP BAR (CÓ NÚT 'VỀ TRANG CHỦ') -->
+                <div id="mode-buttons-admin" class="hidden w-full flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="font-bold text-xs text-slate-200">Trang Quản Trị Admin CMS</span>
                     </div>
 
-                    <div id="mode-buttons-admin" class="hidden items-center gap-2">
-                        <button onclick="switchToClient()" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1.5 transition-all border border-slate-700">
-                            <i class="fa-solid fa-eye text-emerald-400"></i>
-                            <span>Xem Trang Khách</span>
+                    <div class="flex items-center gap-2">
+                        <!-- NÚT VỀ TRANG CHỦ -->
+                        <button onclick="switchToClient()" class="px-3 py-1.5 rounded-md text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white flex items-center gap-1.5 transition-all shadow-md">
+                            <i class="fa-solid fa-house text-white"></i>
+                            <span>Về Trang Chủ</span>
                         </button>
-                        <button onclick="adminLogout()" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-red-900/60 hover:bg-red-800 text-red-200 flex items-center gap-1.5 transition-all border border-red-700/50">
+                        <button onclick="adminLogout()" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-red-900/70 hover:bg-red-800 text-red-100 flex items-center gap-1.5 transition-all border border-red-700/50">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Đăng xuất</span>
                         </button>
@@ -124,10 +122,10 @@
     </header>
 
     <!-- TRÌNH XEM HTML TỰ DO (EMBEDDED SANDBOX VIEWER) -->
-    <div id="html-viewer-container" class="hidden fixed inset-0 top-14 bg-white z-30 flex flex-col">
+    <div id="html-viewer-container" class="hidden fixed inset-0 top-12 bg-white z-30 flex flex-col">
         <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between border-b border-slate-800">
             <div class="flex items-center gap-3">
-                <button onclick="closeHtmlViewer()" class="px-3 py-1.5 bg-brand-700 hover:bg-brand-800 text-white text-xs font-medium rounded-lg flex items-center gap-2 transition-colors">
+                <button onclick="closeHtmlViewer()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-medium rounded-lg flex items-center gap-2 transition-colors">
                     <i class="fa-solid fa-arrow-left"></i>
                     <span>Quay lại trang chủ</span>
                 </button>
@@ -138,7 +136,6 @@
                 </div>
             </div>
             <div class="flex items-center gap-2 text-xs text-slate-400">
-                <span class="hidden sm:inline-block bg-slate-800 px-2.5 py-1 rounded border border-slate-700"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i>Embedded Viewer</span>
                 <button onclick="closeHtmlViewer()" class="text-slate-400 hover:text-white p-1 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -151,11 +148,11 @@
 
     <!-- VIEW 1: TRANG KHÁCH HÀNG (CLIENT FRONTEND) -->
     <div id="client-view" class="flex-1 flex flex-col">
-        <!-- CLIENT NAVBAR -->
-        <nav class="bg-white border-b border-slate-200 sticky top-14 z-20 shadow-sm">
+        <!-- CLIENT NAVBAR WITH XTIME LOGO -->
+        <nav class="bg-white border-b border-slate-200 sticky top-12 z-20 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
-                    <a href="#" class="flex items-center gap-3 group">
+                    <a href="#" class="flex items-center group">
                         <div id="client-logo-render" class="flex items-center"></div>
                     </a>
 
@@ -163,19 +160,19 @@
 
                     <div class="hidden lg:flex items-center gap-4">
                         <div class="text-right">
-                            <p class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">Tư vấn miễn phí</p>
-                            <a href="#" id="client-hotline-link" class="text-base font-extrabold text-brand-700 hover:text-brand-800 flex items-center gap-1.5">
+                            <p class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">Tư vấn báo giá</p>
+                            <a href="#" id="client-hotline-link" class="text-base font-extrabold text-brand-600 hover:text-brand-700 flex items-center gap-1.5">
                                 <i class="fa-solid fa-phone-volume text-brand-600 animate-pulse"></i>
-                                <span id="client-hotline-text">0900.000.000</span>
+                                <span id="client-hotline-text">0914.430.033</span>
                             </a>
                         </div>
-                        <a href="#contact" class="px-4 py-2.5 bg-brand-700 hover:bg-brand-800 text-white rounded-xl font-semibold text-xs shadow-md shadow-brand-700/20 transition-all hover:shadow-lg hover:shadow-brand-700/30">
+                        <a href="#contact" class="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold text-xs shadow-md transition-all hover:shadow-lg">
                             Báo Giá Ngay
                         </a>
                     </div>
 
                     <div class="md:hidden flex items-center">
-                        <button onclick="toggleMobileMenu()" class="p-2 text-slate-600 hover:text-brand-700 focus:outline-none">
+                        <button onclick="toggleMobileMenu()" class="p-2 text-slate-600 hover:text-brand-600 focus:outline-none">
                             <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
                         </button>
                     </div>
@@ -188,35 +185,35 @@
         </nav>
 
         <!-- HERO BANNER SECTION -->
-        <section class="relative bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white py-20 lg:py-28 overflow-hidden">
+        <section class="relative bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white py-20 lg:py-24 overflow-hidden">
             <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                     <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
                         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-300 text-xs font-semibold">
                             <i class="fa-solid fa-sparkles text-amber-400"></i>
-                            <span id="hero-badge-text">Giải Pháp Truyền Thông Toàn Diện</span>
+                            <span id="hero-badge-text">Thi Công Quảng Cáo Mỹ Thuật Chuyên Nghiệp</span>
                         </div>
                         <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                            Nâng Tầm Thương Hiệu Với Chiến Lược Quảng Cáo Đột Phá
+                            Nâng Tầm Thương Hiệu Cùng XTIME Quảng Cáo
                         </h1>
                         <p id="hero-subtitle" class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
-                            Chuyên thiết kế, thi công biển bảng quảng cáo, chạy chiến dịch Digital Marketing và sản xuất ấn phẩm truyền thông độc đáo.
+                            Chuyên thiết kế, thi công biển bảng quảng cáo Alu, Mica, Đèn LED, hộp đèn, chữ nổi và giải pháp nhận diện thương hiệu độc đáo tại Đà Nẵng & Miền Trung.
                         </p>
                         <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
-                            <a id="hero-btn-primary" href="#services" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-600/30 transition-all hover:-translate-y-0.5">
+                            <a id="hero-btn-primary" href="#services" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all hover:-translate-y-0.5">
                                 Khám Phá Dịch Vụ
                             </a>
                             <a id="hero-btn-secondary" href="#portfolio" class="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold text-sm rounded-xl border border-slate-700 backdrop-blur-sm transition-all">
-                                Xem Dự Án Đã Làm
+                                Dự Án Đã Thi Công
                             </a>
                         </div>
                     </div>
                     <div class="lg:col-span-5">
                         <div class="relative mx-auto max-w-md lg:max-w-none">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-3xl blur-xl opacity-40"></div>
+                            <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-red-500 rounded-3xl blur-xl opacity-40"></div>
                             <div class="relative bg-slate-800 border border-slate-700/80 rounded-2xl overflow-hidden shadow-2xl">
-                                <img id="hero-image" src="https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=800&q=80" alt="Hero Banner" class="w-full h-80 object-cover">
+                                <img id="hero-image" src="https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=800&q=80" alt="XTIME Banner" class="w-full h-80 object-cover">
                             </div>
                         </div>
                     </div>
@@ -228,7 +225,7 @@
         <section id="services" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-700 mb-2">Dịch Vụ Của Chúng Tôi</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Dịch Vụ Của Chúng Tôi</h2>
                     <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Giải Pháp Quảng Cáo Chuyên Nghiệp</h3>
                     <div class="w-12 h-1 bg-brand-600 mx-auto mt-3 rounded-full"></div>
                 </div>
@@ -240,7 +237,7 @@
         <section id="portfolio" class="py-16 bg-slate-50 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-700 mb-2">Dự Án Tiêu Biểu</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Dự Án Tiêu Biểu</h2>
                     <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Sản Phẩm Đã Thực Hiện</h3>
                     <div class="w-12 h-1 bg-brand-600 mx-auto mt-3 rounded-full"></div>
                 </div>
@@ -252,7 +249,7 @@
         <section id="blog" class="py-16 bg-white border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-700 mb-2">Tin Tức & Sự Kiện</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Tin Tức & Kinh Nghiệm</h2>
                     <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Bài Viết Mới Nhất</h3>
                     <div class="w-12 h-1 bg-brand-600 mx-auto mt-3 rounded-full"></div>
                 </div>
@@ -261,11 +258,11 @@
         </section>
 
         <!-- ĐÁNH GIÁ KHÁCH HÀNG -->
-        <section class="py-16 bg-brand-900 text-white relative overflow-hidden">
+        <section class="py-16 bg-slate-900 text-white relative overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-300 mb-2">Ý Kiến Khách Hàng</h2>
-                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Đối Tác Nói Về Chúng Tôi</h3>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-400 mb-2">Ý Kiến Khách Hàng</h2>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Đối Tác Nói Về XTIME</h3>
                 </div>
                 <div id="testimonials-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </div>
@@ -275,10 +272,10 @@
         <section id="contact" class="py-16 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-                    <div class="lg:col-span-5 bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 p-8 sm:p-10 text-white flex flex-col justify-between">
+                    <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 p-8 sm:p-10 text-white flex flex-col justify-between">
                         <div>
                             <h3 class="text-2xl font-bold mb-3">Liên Hệ Báo Giá</h3>
-                            <p class="text-slate-300 text-xs leading-relaxed mb-8">Hãy gửi thông tin yêu cầu của bạn, đội ngũ chuyên viên quảng cáo của chúng tôi sẽ phản hồi trong vòng 15 phút.</p>
+                            <p class="text-slate-300 text-xs leading-relaxed mb-8">Hãy gửi thông tin yêu cầu của bạn, hệ thống sẽ tự động tổng hợp gửi thư tới Email tư vấn của công ty chúng tôi.</p>
                             
                             <div class="space-y-4 text-xs">
                                 <div class="flex items-start gap-3">
@@ -287,7 +284,7 @@
                                     </div>
                                     <div>
                                         <p class="font-bold text-slate-200">Địa chỉ văn phòng</p>
-                                        <p class="text-slate-300 mt-0.5" id="contact-address">123 Đường Nguyễn Văn Linh, Đà Nẵng</p>
+                                        <p class="text-slate-300 mt-0.5" id="contact-address">89 Ông Ích Khiêm, Đà Nẵng</p>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
@@ -295,8 +292,8 @@
                                         <i class="fa-solid fa-envelope text-brand-400"></i>
                                     </div>
                                     <div>
-                                        <p class="font-bold text-slate-200">Email tư vấn</p>
-                                        <p class="text-slate-300 mt-0.5" id="contact-email">contact@novamedia.vn</p>
+                                        <p class="font-bold text-slate-200">Email tư vấn công ty</p>
+                                        <p class="text-slate-300 mt-0.5" id="contact-email">xtimeadv@gmail.com</p>
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
@@ -305,14 +302,14 @@
                                     </div>
                                     <div>
                                         <p class="font-bold text-slate-200">Hotline hỗ trợ</p>
-                                        <p class="text-slate-300 mt-0.5" id="contact-phone">0900.000.000</p>
+                                        <p class="text-slate-300 mt-0.5" id="contact-phone">0914.430.033</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="pt-8 mt-8 border-t border-white/10">
-                            <p class="text-[11px] text-slate-400 mb-2">Kết nối mạng xã hội</p>
+                            <p class="text-[11px] text-slate-400 mb-2">Mạng xã hội & Tư vấn</p>
                             <div class="flex gap-2">
                                 <a href="#" class="w-8 h-8 bg-white/10 hover:bg-brand-600 rounded-lg flex items-center justify-center text-white transition-colors"><i class="fa-brands fa-facebook-f text-xs"></i></a>
                                 <a href="#" class="w-8 h-8 bg-white/10 hover:bg-red-600 rounded-lg flex items-center justify-center text-white transition-colors"><i class="fa-brands fa-youtube text-xs"></i></a>
@@ -325,27 +322,28 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Họ & Tên *</label>
-                                    <input type="text" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="Nguyễn Văn A">
+                                    <input type="text" id="contact-fullname" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="Nguyễn Văn A">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại / Zalo *</label>
-                                    <input type="tel" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="0901234567">
+                                    <input type="tel" id="contact-phone-input" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="0914.430.033">
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Dịch vụ quan tâm</label>
-                                <select class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600">
-                                    <option>Thi công bảng hiệu Quảng cáo</option>
-                                    <option>Sản xuất Video Marketing</option>
-                                    <option>Quản trị Marketing trọn gói</option>
+                                <select id="contact-service-select" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600">
+                                    <option>Thi công bảng hiệu Quảng cáo Alu - Mica</option>
+                                    <option>Chữ nổi LED & Bảng hiệu Hộp đèn</option>
+                                    <option>In ấn & Bộ Nhận Diện Thương Hiệu</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Nội dung yêu cầu</label>
-                                <textarea rows="4" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="Chi tiết kích thước, vật liệu..."></textarea>
+                                <textarea id="contact-message-input" rows="4" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-brand-600" placeholder="Chi tiết kích thước, vật liệu..."></textarea>
                             </div>
-                            <button type="submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-bold text-xs rounded-xl shadow-lg transition-all">
-                                Gửi Yêu Cầu Báo Giá
+                            <button type="submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Gửi Yêu Cầu Báo Giá Về Email Công Ty</span>
                             </button>
                         </form>
                     </div>
@@ -356,7 +354,7 @@
         <!-- FOOTER -->
         <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-auto">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs space-y-3">
-                <p id="footer-company-name" class="text-white font-bold text-sm">NovaMedia Quảng Cáo & Truyền Thông</p>
+                <p id="footer-company-name" class="text-white font-bold text-sm">Công Ty TNHH TM & DV Quảng Cáo Mỹ Thuật XTIME</p>
                 <p id="footer-slogan">Đồng hành cùng sự phát triển thương hiệu doanh nghiệp Việt</p>
                 <p class="text-slate-500 pt-4 border-t border-slate-800/80">&copy; <span id="footer-year">2026</span> All rights reserved.</p>
             </div>
@@ -368,7 +366,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-3">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden sticky top-20">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden sticky top-16">
                         <div class="p-4 bg-slate-900 text-white border-b border-slate-800">
                             <h2 class="font-bold text-sm flex items-center gap-2">
                                 <i class="fa-solid fa-sliders text-brand-400"></i>
@@ -422,9 +420,9 @@
                                 </div>
                             </div>
                             <div class="space-y-2">
-                                <label class="block text-xs font-bold text-slate-700">Logo Công Ty</label>
+                                <label class="block text-xs font-bold text-slate-700">Logo Công Ty (URL hoặc Tệp)</label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <input type="text" id="adm-logo-url" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" placeholder="URL ảnh">
+                                    <input type="text" id="adm-logo-url" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" placeholder="URL ảnh logo...">
                                     <input type="file" accept="image/*" onchange="handleImageUpload(event, 'adm-logo-url')" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-brand-50 file:text-brand-700">
                                 </div>
                             </div>
@@ -434,8 +432,8 @@
                                     <input type="text" id="adm-hotline" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">Email Liên Hệ</label>
-                                    <input type="email" id="adm-email" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Email Nhận Báo Giá *</label>
+                                    <input type="email" id="adm-email" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Admin Mới</label>
@@ -447,7 +445,7 @@
                                 <input type="text" id="adm-address" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
                             </div>
                             <div class="pt-3 flex justify-end">
-                                <button type="submit" class="px-5 py-2.5 bg-brand-700 hover:bg-brand-800 text-white font-bold text-xs rounded-xl shadow-md">
+                                <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md">
                                     <i class="fa-solid fa-floppy-disk mr-1.5"></i>Lưu Cấu Hình
                                 </button>
                             </div>
@@ -460,7 +458,7 @@
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">2. Quản Lý Menu & Chèn Tệp File .HTML</h3>
                             </div>
-                            <button onclick="openMenuModal()" class="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+                            <button onclick="openMenuModal()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i>Thêm Menu Chính
                             </button>
                         </div>
@@ -493,7 +491,7 @@
                                 </div>
                             </div>
                             <div class="pt-3 flex justify-end">
-                                <button type="submit" class="px-5 py-2.5 bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md">
+                                <button type="submit" class="px-5 py-2.5 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md">
                                     <i class="fa-solid fa-floppy-disk mr-1.5"></i>Lưu Banner Hero
                                 </button>
                             </div>
@@ -504,7 +502,7 @@
                     <div id="admin-panel-services" class="admin-tab-content hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                             <h3 class="text-lg font-bold text-slate-900">4. Quản Lý Dịch Vụ Quảng Cáo</h3>
-                            <button onclick="openServiceModal()" class="px-4 py-2 bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+                            <button onclick="openServiceModal()" class="px-4 py-2 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i>Thêm Dịch Vụ
                             </button>
                         </div>
@@ -515,7 +513,7 @@
                     <div id="admin-panel-portfolio" class="admin-tab-content hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                             <h3 class="text-lg font-bold text-slate-900">5. Quản Lý Dự Án Portfolio</h3>
-                            <button onclick="openPortfolioModal()" class="px-4 py-2 bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+                            <button onclick="openPortfolioModal()" class="px-4 py-2 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i>Thêm Dự Án
                             </button>
                         </div>
@@ -526,7 +524,7 @@
                     <div id="admin-panel-blog" class="admin-tab-content hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                             <h3 class="text-lg font-bold text-slate-900">6. Quản Lý Bài Viết & Blog</h3>
-                            <button onclick="openBlogModal()" class="px-4 py-2 bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+                            <button onclick="openBlogModal()" class="px-4 py-2 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i>Thêm Bài Viết
                             </button>
                         </div>
@@ -537,7 +535,7 @@
                     <div id="admin-panel-testimonials" class="admin-tab-content hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 space-y-6">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                             <h3 class="text-lg font-bold text-slate-900">7. Quản Lý Đánh Giá Khách Hàng</h3>
-                            <button onclick="openTestimonialModal()" class="px-4 py-2 bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+                            <button onclick="openTestimonialModal()" class="px-4 py-2 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i>Thêm Đánh Giá
                             </button>
                         </div>
@@ -551,7 +549,7 @@
                                 <i class="fa-brands fa-github text-purple-600"></i>
                                 <span>8. Cấu Hình Đồng Bộ GitHub API</span>
                             </h3>
-                            <p class="text-xs text-slate-500">Giúp dữ liệu cập nhật trực tiếp lên repository <span class="font-bold text-brand-700">xtimeadv.github.io</span>, reset trang không bị mất!</p>
+                            <p class="text-xs text-slate-500">Giúp dữ liệu cập nhật trực tiếp lên repository <span class="font-bold text-brand-600">xtimeadv.github.io</span>, reset trang không bị mất!</p>
                         </div>
 
                         <form onsubmit="saveGithubConfig(event)" class="space-y-4">
@@ -636,7 +634,7 @@
 
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeMenuModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-700 text-white rounded-lg text-xs font-bold shadow-md">Lưu Menu</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md">Lưu Menu</button>
                 </div>
             </form>
         </div>
@@ -665,7 +663,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeServiceModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-700 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
                 </div>
             </form>
         </div>
@@ -695,7 +693,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closePortfolioModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-700 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
                 </div>
             </form>
         </div>
@@ -725,7 +723,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeBlogModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-700 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
                 </div>
             </form>
         </div>
@@ -756,7 +754,7 @@
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeTestimonialModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-xs">Hủy</button>
-                    <button type="submit" class="px-5 py-2 bg-brand-700 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold shadow-md">Lưu</button>
                 </div>
             </form>
         </div>
@@ -766,12 +764,12 @@
     <script>
         const DEFAULT_DATA = {
             general: {
-                companyName: "NovaMedia Quảng Cáo",
-                slogan: "Giải Pháp Quảng Cáo & Truyền Thông Đột Phá",
-                logoUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=80",
-                hotline: "0900.000.000",
-                email: "contact@novamedia.vn",
-                address: "123 Đường Nguyễn Văn Linh, Quận Thanh Khê, TP. Đà Nẵng",
+                companyName: "XTIME Quảng Cáo",
+                slogan: "Công Ty TNHH TM & DV Quảng Cáo Mỹ Thuật XTIME",
+                logoUrl: "", // Defaults to custom XTIME SVG logo
+                hotline: "0914.430.033 - 0236.3825119",
+                email: "xtimeadv@gmail.com",
+                address: "89 Ông Ích Khiêm, Q. Hải Châu, TP. Đà Nẵng",
                 adminPassword: "admin123"
             },
             githubConfig: {
@@ -781,9 +779,9 @@
                 token: ""
             },
             hero: {
-                badge: "Giải Pháp Truyền Thông Toàn Diện 2026",
-                title: "Nâng Tầm Thương Hiệu Với Chiến Lược Quảng Cáo Đột Phá",
-                subtitle: "Chuyên thiết kế, thi công biển bảng quảng cáo, chạy chiến dịch Digital Marketing và sản xuất ấn phẩm truyền thông độc đáo.",
+                badge: "Thi Công Quảng Cáo Mỹ Thuật Chuyên Nghiệp",
+                title: "Nâng Tầm Thương Hiệu Cùng XTIME Quảng Cáo",
+                subtitle: "Chuyên thiết kế, thi công biển bảng quảng cáo Alu, Mica, Đèn LED, hộp đèn, chữ nổi và giải pháp nhận diện thương hiệu độc đáo.",
                 imageUrl: "https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=800&q=80"
             },
             menus: [
@@ -795,7 +793,7 @@
                     type: "url",
                     submenus: [
                         { id: "sm1", title: "Thi Công Bảng Hiệu", url: "#services", type: "url" },
-                        { id: "sm2", title: "Digital Marketing", url: "#services", type: "url" },
+                        { id: "sm2", title: "Chữ Nổi & Đèn LED", url: "#services", type: "url" },
                         { id: "sm3", title: "Tìm Bán Kính", url: "ban-kinh.html", type: "html_file", htmlContent: "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Tìm Bán Kính Demo</title><style>body{font-family:sans-serif;padding:40px;text-align:center;background:#f8fafc;color:#1e293b;} .card{background:white;padding:30px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.05);max-width:500px;margin:0 auto;} h2{color:#2563eb;}</style></head><body><div class='card'><h2>Trang Tìm Bán Kính (Demo HTML)</h2><p>Đây là tệp HTML đính kèm được hiển thị trực tiếp trong trang mà không mở tab mới.</p></div></body></html>" }
                     ] 
                 },
@@ -804,22 +802,22 @@
                 { id: "m5", title: "Liên Hệ", url: "#contact", type: "url", submenus: [] }
             ],
             services: [
-                { id: "s1", title: "Thi Công Bảng Hiệu Alu - Mica", icon: "fa-solid fa-rectangle-ad", desc: "Thiết kế thi công mặt dựng Alu, chữ nổi Mica phát sáng LED chuyên nghiệp cho shop, showroom." },
-                { id: "s2", title: "Chạy Quảng Cáo Performance", icon: "fa-solid fa-chart-line", desc: "Tối ưu hóa chiến dịch Facebook Ads, Google Ads, TikTok Ads đem lại lượng khách hàng tiềm năng cao." },
-                { id: "s3", title: "In Ấn Ấn Phẩm Truyền Thông", icon: "fa-solid fa-print", desc: "In catalogue, tờ rơi, brochure, standee chất lượng cao sắc nét với chi phí tối ưu." }
+                { id: "s1", title: "Thi Công Bảng Hiệu Alu - Mica", icon: "fa-solid fa-rectangle-ad", desc: "Thiết kế thi công mặt dựng Alu, chữ nổi Mica phát sáng LED chuyên nghiệp cho shop, showroom, tòa nhà." },
+                { id: "s2", title: "Hộp Đèn Quảng Cáo & Đèn LED", icon: "fa-solid fa-lightbulb", desc: "Thi công hộp đèn LED matrix, LED siêu sáng, hộp đèn hút nổi mica ấn tượng, tiết kiệm điện." },
+                { id: "s3", title: "In Ấn & Nhận Diện Thương Hiệu", icon: "fa-solid fa-print", desc: "In bạt hiflex, decal, catalogue, tờ rơi, poster, standee sắc nét với thời gian hoàn thành nhanh." }
             ],
             portfolio: [
-                { id: "p1", title: "Chuỗi Showroom Thời Trang LSK", category: "Thi Công Bảng Hiệu", image: "https://images.unsplash.com/photo-1567449303078-57ad995bd301?auto=format&fit=crop&w=600&q=80" },
-                { id: "p2", title: "Chiến Dịch Ra Mắt Dự Án BĐS", category: "Digital Marketing", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80" },
-                { id: "p3", title: "Bộ Nhận Diện Thương Hiệu SPT Media", category: "Branding Design", image: "https://images.unsplash.com/photo-1600508774634-4e11d34730e2?auto=format&fit=crop&w=600&q=80" }
+                { id: "p1", title: "Bảng Hiệu Showroom Mỹ Thuật XTIME", category: "Thi Công Bảng Hiệu", image: "https://images.unsplash.com/photo-1567449303078-57ad995bd301?auto=format&fit=crop&w=600&q=80" },
+                { id: "p2", title: "Chuỗi Cửa Hàng Thời Trang Cao Cấp", category: "Chữ Nổi LED", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80" },
+                { id: "p3", title: "Bộ Nhận Diện Thương Hiệu Doanh Nghiệp", category: "Branding Design", image: "https://images.unsplash.com/photo-1600508774634-4e11d34730e2?auto=format&fit=crop&w=600&q=80" }
             ],
             blog: [
-                { id: "b1", title: "5 Xu Hướng Biển Quảng Cáo Nổi Bật 2026", summary: "Khám phá các chất liệu vật liệu biển quảng cáo ngoài trời đang dẫn đầu xu hướng thiết kế.", image: "https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=600&q=80" },
-                { id: "b2", title: "Cách Tối Ưu Chi Phí Facebook Ads Cho Doanh Nghiệp", summary: "Những mẹo giúp tiếp cận đúng khách hàng mục tiêu mà không bị lãng phí ngân sách.", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" }
+                { id: "b1", title: "5 Xu Hướng Biển Quảng Cáo Alu Mica Nổi Bật 2026", summary: "Khám phá các chất liệu vật liệu biển quảng cáo ngoài trời đang dẫn đầu xu hướng thiết kế.", image: "https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=600&q=80" },
+                { id: "b2", title: "Kinh Nghiệm Lựa Chọn Đèn LED Thi Công Bảng Hiệu", summary: "Những lưu ý quan trọng giúp mặt dựng biển bảng phát sáng nổi bật và bền bỉ theo thời gian.", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" }
             ],
             testimonials: [
-                { id: "t1", name: "Anh Trần Minh Hoàng", role: "CEO Chuỗi Cửa Hàng Thời Trang", comment: "Đội ngũ NovaMedia thi công bảng hiệu cực kỳ nhanh chóng và đúng tiến độ cam kết. Rất hài lòng!" },
-                { id: "t2", name: "Chị Nguyễn Mai Anh", role: "Marketing Director", comment: "Chiến dịch truyền thông online do NovaMedia triển khai giúp doanh số công ty tăng trưởng vượt bậc." }
+                { id: "t1", name: "Anh Trần Minh Hoàng", role: "Chủ Chuỗi Cửa Hàng Tại Đà Nẵng", comment: "Đội ngũ XTIME thi công biển hiệu Alu Mica cực kỳ sắc nét, tiến độ bàn giao nhanh đúng cam kết." },
+                { id: "t2", name: "Chị Nguyễn Mai Anh", role: "Giám Đốc Chi Nhánh", comment: "Rất hài lòng về thái độ làm việc tận tâm và chất lượng công trình quảng cáo của XTIME Quảng Cáo." }
             ]
         };
 
@@ -834,7 +832,7 @@
         });
 
         function loadDataFromStorage() {
-            const saved = localStorage.getItem('NOVAMEDIA_CMS_DATA');
+            const saved = localStorage.getItem('XTIME_CMS_DATA');
             if (saved) {
                 try { appData = JSON.parse(saved); } catch(e) { appData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
             } else {
@@ -844,7 +842,7 @@
 
         function saveData() {
             try {
-                localStorage.setItem('NOVAMEDIA_CMS_DATA', JSON.stringify(appData));
+                localStorage.setItem('XTIME_CMS_DATA', JSON.stringify(appData));
                 renderClientView();
                 if(!document.getElementById('admin-view').classList.contains('hidden')) {
                     renderAdminView();
@@ -863,31 +861,56 @@
                         const remoteData = await res.json();
                         if(remoteData && remoteData.general) {
                             appData = Object.assign({}, appData, remoteData);
-                            localStorage.setItem('NOVAMEDIA_CMS_DATA', JSON.stringify(appData));
+                            localStorage.setItem('XTIME_CMS_DATA', JSON.stringify(appData));
                         }
                     }
                 } catch(e) {}
             }
         }
 
+        function getXtimeLogoHtml() {
+            if (appData.general.logoUrl) {
+                return `<img src="${appData.general.logoUrl}" alt="${appData.general.companyName}" class="h-12 w-auto object-contain rounded-lg">`;
+            }
+            // Crisp SVG reproduction of the official XTIME Logo
+            return `
+                <div class="flex items-center gap-2">
+                    <svg class="h-11 w-auto" viewBox="0 0 420 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Badge emblem -->
+                        <circle cx="60" cy="60" r="54" fill="#0284c7" stroke="#0369a1" stroke-width="3"/>
+                        <circle cx="60" cy="60" r="45" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+                        <circle cx="60" cy="60" r="32" fill="#ffffff"/>
+                        <!-- Badge Text -->
+                        <path id="badgeArc" d="M 22,60 A 38,38 0 1,1 98,60" fill="none"/>
+                        <text font-size="7" font-weight="bold" fill="#0369a1" letter-spacing="0.5">
+                            <textPath href="#badgeArc" startOffset="50%" text-anchor="middle">QUẢNG CÁO MỸ THUẬT</textPath>
+                        </text>
+                        <!-- Center XTIME inside emblem -->
+                        <text x="60" y="67" font-size="20" font-weight="900" fill="#dc2626" font-family="Arial, sans-serif" text-anchor="middle">XTIME</text>
+                        
+                        <!-- Main Title Text -->
+                        <text x="135" y="72" font-size="56" font-weight="900" font-family="Arial, sans-serif">
+                            <tspan fill="#2563eb">X</tspan><tspan fill="#dc2626">TIME</tspan>
+                        </text>
+                        <text x="138" y="106" font-size="26" font-weight="800" fill="#475569" font-family="Arial, sans-serif" letter-spacing="3">QUẢNG CÁO</text>
+                    </svg>
+                </div>
+            `;
+        }
+
         function renderClientView() {
             const { general, hero, menus, services, portfolio, blog, testimonials } = appData;
 
             document.getElementById('site-title-tag').innerText = `${general.companyName} - ${general.slogan}`;
-            document.getElementById('header-company-name').innerText = general.companyName;
-            document.getElementById('footer-company-name').innerText = general.companyName;
-            document.getElementById('footer-slogan').innerText = general.slogan;
+            document.getElementById('footer-company-name').innerText = general.slogan || general.companyName;
+            document.getElementById('footer-slogan').innerText = "Thi công bảng hiệu Alu, Mica, Đèn LED chuyên nghiệp tại Đà Nẵng";
             document.getElementById('client-hotline-text').innerText = general.hotline;
-            document.getElementById('client-hotline-link').href = `tel:${general.hotline.replace(/\./g, '')}`;
+            document.getElementById('client-hotline-link').href = `tel:${general.hotline.split('-')[0].trim().replace(/\./g, '')}`;
 
             const logoContainer = document.getElementById('client-logo-render');
-            if (general.logoUrl) {
-                logoContainer.innerHTML = `<img src="${general.logoUrl}" alt="${general.companyName}" class="h-10 w-auto object-contain rounded-lg">`;
-            } else {
-                logoContainer.innerHTML = `<span class="text-xl font-black text-brand-800 tracking-tight">${general.companyName}</span>`;
-            }
+            logoContainer.innerHTML = getXtimeLogoHtml();
 
-            document.getElementById('hero-badge-text').innerText = hero.badge || "Truyền Thông Quảng Cáo";
+            document.getElementById('hero-badge-text').innerText = hero.badge || "Thi Công Quảng Cáo Chuyên Nghiệp";
             document.getElementById('hero-title').innerText = hero.title;
             document.getElementById('hero-subtitle').innerText = hero.subtitle;
             if(hero.imageUrl) document.getElementById('hero-image').src = hero.imageUrl;
@@ -896,7 +919,7 @@
 
             document.getElementById('services-grid').innerHTML = services.map(s => `
                 <div class="bg-slate-50 border border-slate-100 p-6 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-12 h-12 bg-brand-100 group-hover:bg-brand-600 rounded-xl flex items-center justify-center text-brand-700 group-hover:text-white text-xl mb-4 transition-colors">
+                    <div class="w-12 h-12 bg-brand-100 group-hover:bg-brand-600 rounded-xl flex items-center justify-center text-brand-600 group-hover:text-white text-xl mb-4 transition-colors">
                         <i class="${s.icon || 'fa-solid fa-star'}"></i>
                     </div>
                     <h4 class="text-lg font-bold text-slate-900 mb-2">${s.title}</h4>
@@ -911,7 +934,7 @@
                         <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full">${p.category}</span>
                     </div>
                     <div class="p-4">
-                        <h4 class="font-bold text-slate-800 text-sm group-hover:text-brand-700 transition-colors">${p.title}</h4>
+                        <h4 class="font-bold text-slate-800 text-sm group-hover:text-brand-600 transition-colors">${p.title}</h4>
                     </div>
                 </div>
             `).join('');
@@ -923,10 +946,10 @@
                     </div>
                     <div class="p-5 flex-1 flex flex-col justify-between">
                         <div>
-                            <h4 class="font-bold text-slate-900 text-sm mb-2 hover:text-brand-700 cursor-pointer line-clamp-2">${b.title}</h4>
+                            <h4 class="font-bold text-slate-900 text-sm mb-2 hover:text-brand-600 cursor-pointer line-clamp-2">${b.title}</h4>
                             <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed">${b.summary}</p>
                         </div>
-                        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center text-brand-700 font-bold text-xs">
+                        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center text-brand-600 font-bold text-xs">
                             <span>Đọc tiếp</span>
                             <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
                         </div>
@@ -966,12 +989,12 @@
                     const clickAttr = m.type === 'html_file' ? `onclick="openEmbeddedHtml('${m.title}', \`${encodeURIComponent(m.htmlContent || '')}\`)"` : '';
                     const hrefAttr = m.type === 'html_file' ? 'javascript:void(0)' : m.url;
                     
-                    desktopHTML += `<a href="${hrefAttr}" ${clickAttr} class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-brand-700 rounded-lg hover:bg-slate-50 transition-colors">${m.title}</a>`;
+                    desktopHTML += `<a href="${hrefAttr}" ${clickAttr} class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-brand-600 rounded-lg hover:bg-slate-50 transition-colors">${m.title}</a>`;
                     mobileHTML += `<a href="${hrefAttr}" ${clickAttr} class="block px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-lg">${m.title}</a>`;
                 } else {
                     desktopHTML += `
                         <div class="relative group">
-                            <button class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-brand-700 rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1">
+                            <button class="px-3 py-2 text-xs font-bold text-slate-700 hover:text-brand-600 rounded-lg hover:bg-slate-50 transition-colors inline-flex items-center gap-1">
                                 <span>${m.title}</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:rotate-180 transition-transform"></i>
                             </button>
@@ -982,7 +1005,7 @@
                                         const smHref = sm.type === 'html_file' ? 'javascript:void(0)' : sm.url;
                                         
                                         return `
-                                            <a href="${smHref}" ${smClick} class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors">
+                                            <a href="${smHref}" ${smClick} class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors">
                                                 <span>${sm.title}</span>
                                             </a>
                                         `;
@@ -999,7 +1022,7 @@
                                 ${m.submenus.map(sm => {
                                     const smClick = sm.type === 'html_file' ? `onclick="openEmbeddedHtml('${sm.title}', \`${encodeURIComponent(sm.htmlContent || '')}\`)"` : '';
                                     const smHref = sm.type === 'html_file' ? 'javascript:void(0)' : sm.url;
-                                    return `<a href="${smHref}" ${smClick} class="block px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-brand-700">${sm.title}</a>`;
+                                    return `<a href="${smHref}" ${smClick} class="block px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-brand-600">${sm.title}</a>`;
                                 }).join('')}
                             </div>
                         </div>
@@ -1061,7 +1084,7 @@
         function adminLogout() {
             isAdminLoggedIn = false;
             switchToClient();
-            showToast("Đã đăng xuất.", "info");
+            showToast("Đã đăng xuất khỏi quản trị.", "info");
         }
 
         function switchToAdmin() {
@@ -1163,7 +1186,7 @@
             document.getElementById('admin-testimonials-list').innerHTML = testimonials.map(t => `
                 <div class="p-4 border border-slate-200 rounded-xl bg-slate-50 flex items-start justify-between">
                     <div>
-                        <h5 class="font-bold text-xs text-slate-800">${t.name} - <span class="text-brand-700 font-normal">${t.role}</span></h5>
+                        <h5 class="font-bold text-xs text-slate-800">${t.name} - <span class="text-brand-600 font-normal">${t.role}</span></h5>
                         <p class="text-[11px] text-slate-600 italic mt-1">"${t.comment}"</p>
                     </div>
                     <div class="flex gap-1">
@@ -1351,16 +1374,14 @@
         }
 
         function deleteMenu(id, parentId = null) {
-            if (confirm("Bạn có chắc muốn xóa menu này?")) {
-                if (parentId) {
-                    const parent = appData.menus.find(m => m.id === parentId);
-                    if (parent) parent.submenus = parent.submenus.filter(sm => sm.id !== id);
-                } else {
-                    appData.menus = appData.menus.filter(m => m.id !== id);
-                }
-                saveData();
-                showToast("Đã xóa menu!", "info");
+            if (parentId) {
+                const parent = appData.menus.find(m => m.id === parentId);
+                if (parent) parent.submenus = parent.submenus.filter(sm => sm.id !== id);
+            } else {
+                appData.menus = appData.menus.filter(m => m.id !== id);
             }
+            saveData();
+            showToast("Đã xóa menu!", "info");
         }
 
         function openServiceModal(id = null) {
@@ -1394,10 +1415,9 @@
             saveData(); closeServiceModal(); showToast("Đã lưu dịch vụ!", "success");
         }
         function deleteService(id) {
-            if(confirm("Xóa dịch vụ này?")) {
-                appData.services = appData.services.filter(s => s.id !== id);
-                saveData();
-            }
+            appData.services = appData.services.filter(s => s.id !== id);
+            saveData();
+            showToast("Đã xóa dịch vụ!", "info");
         }
 
         function openPortfolioModal(id = null) {
@@ -1409,7 +1429,7 @@
                 document.getElementById('form-portfolio-image').value = p.image;
             } else {
                 document.getElementById('form-portfolio-title').value = '';
-                document.getElementById('form-portfolio-category').value = 'Biển Bảng Quảng Cáo';
+                document.getElementById('form-portfolio-category').value = 'Thi Công Bảng Hiệu';
                 document.getElementById('form-portfolio-image').value = '';
             }
             document.getElementById('modal-portfolio-form').classList.remove('hidden');
@@ -1431,10 +1451,9 @@
             saveData(); closePortfolioModal(); showToast("Đã lưu dự án!", "success");
         }
         function deletePortfolio(id) {
-            if(confirm("Xóa dự án này?")) {
-                appData.portfolio = appData.portfolio.filter(p => p.id !== id);
-                saveData();
-            }
+            appData.portfolio = appData.portfolio.filter(p => p.id !== id);
+            saveData();
+            showToast("Đã xóa dự án!", "info");
         }
 
         function openBlogModal(id = null) {
@@ -1468,10 +1487,9 @@
             saveData(); closeBlogModal(); showToast("Đã lưu bài viết!", "success");
         }
         function deleteBlog(id) {
-            if(confirm("Xóa bài viết này?")) {
-                appData.blog = appData.blog.filter(b => b.id !== id);
-                saveData();
-            }
+            appData.blog = appData.blog.filter(b => b.id !== id);
+            saveData();
+            showToast("Đã xóa bài viết!", "info");
         }
 
         function openTestimonialModal(id = null) {
@@ -1505,10 +1523,9 @@
             saveData(); closeTestimonialModal(); showToast("Đã lưu đánh giá!", "success");
         }
         function deleteTestimonial(id) {
-            if(confirm("Xóa đánh giá này?")) {
-                appData.testimonials = appData.testimonials.filter(t => t.id !== id);
-                saveData();
-            }
+            appData.testimonials = appData.testimonials.filter(t => t.id !== id);
+            saveData();
+            showToast("Đã xóa đánh giá!", "info");
         }
 
         function handleImageUpload(e, targetInputId) {
@@ -1602,7 +1619,30 @@
 
         function handleContactSubmit(e) {
             e.preventDefault();
-            showToast("Đã gửi thông tin báo giá thành công!", "success");
+            
+            const fullName = document.getElementById('contact-fullname').value.trim();
+            const phone = document.getElementById('contact-phone-input').value.trim();
+            const service = document.getElementById('contact-service-select').value;
+            const message = document.getElementById('contact-message-input').value.trim();
+            const targetEmail = (appData && appData.general && appData.general.email) ? appData.general.email : 'xtimeadv@gmail.com';
+
+            // Build mailto URI to open user's local email app addressed to targetEmail
+            const mailSubject = encodeURIComponent(`[YÊU CẦU BÁO GIÁ XTIME] ${fullName} - SĐT: ${phone}`);
+            const mailBody = encodeURIComponent(
+                `Kính gửi Ban Quản Lý / Bộ Phận Tư Vấn XTIME Quảng Cáo,\n\n` +
+                `Tôi cần tư vấn & báo giá chi tiết dịch vụ quảng cáo:\n\n` +
+                `- Họ & Tên khách hàng: ${fullName}\n` +
+                `- Số điện thoại / Zalo: ${phone}\n` +
+                `- Dịch vụ quan tâm: ${service}\n` +
+                `- Nội dung yêu cầu:\n${message}\n\n` +
+                `----------------------------------------\n` +
+                `Thư gửi tự động từ Website Quảng Cáo XTIME (${appData.general.companyName || 'XTIME Quảng Cáo'})`
+            );
+
+            // Trigger mail client launch
+            window.location.href = `mailto:${targetEmail}?subject=${mailSubject}&body=${mailBody}`;
+
+            showToast(`Đã tạo thông báo gửi tới Email ${targetEmail}!`, "success");
             e.target.reset();
         }
 
